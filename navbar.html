@@ -1,0 +1,130 @@
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="logo">
+        <a href="index.html">
+            <img src="logo.png" alt="Dr Kemmouche Logo">
+        </a>
+    </div>
+    <div class="nav-links">
+        <a href="index.html">Accueil</a>
+        <a href="index.html#about">À propos</a>
+        <a href="index.html#cabinet">Cabinet</a>
+        <div class="dropdown">
+            <a href="#" class="dropdown-trigger">Soins</a>
+            <div class="dropdown-content">
+                <a href="soins-peau.html">Soins pour la peau</a>
+                <a href="soins-cheveux.html">Soins pour les cheveux</a>
+            </div>
+        </div>
+        <a href="articles.html">Articles</a>
+        <a href="temoignages.html">Témoignages</a>
+        <a href="rdv.html">Rendez-vous</a>
+        <a href="login.html">Connexion</a>
+    </div>
+</nav>
+
+<style>
+    /* Navbar Styles */
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo img {
+        height: 50px;
+        transition: var(--transition);
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .nav-links a {
+        color: var(--text-color);
+        text-decoration: none;
+        font-weight: 500;
+        transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+        color: var(--secondary-color);
+    }
+
+    /* Dropdown Styles */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        min-width: 200px;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        z-index: 1000;
+        border: 1px solid rgba(164, 69, 164, 0.2);
+        padding: 0.5rem 0;
+    }
+
+    .dropdown-content a {
+        display: block;
+        padding: 0.8rem 1.5rem;
+        color: var(--text-color);
+        text-decoration: none;
+        transition: var(--transition);
+        font-size: 0.9rem;
+    }
+
+    .dropdown-content a:hover {
+        background: rgba(164, 69, 164, 0.1);
+        color: var(--secondary-color);
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+        animation: fadeInUp 0.3s ease-out;
+    }
+
+    .dropdown-trigger {
+        cursor: pointer;
+    }
+
+    .dropdown-trigger::after {
+        content: '\f107';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        margin-left: 0.5rem;
+        transition: var(--transition);
+    }
+
+    .dropdown:hover .dropdown-trigger::after {
+        transform: rotate(180deg);
+    }
+
+    @media (max-width: 768px) {
+        .navbar {
+            padding: 1rem;
+        }
+
+        .nav-links {
+            display: none;
+        }
+    }
+</style> 

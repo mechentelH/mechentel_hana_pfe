@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Articles - Dr Kemmouche</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/navbar.js"></script>
+    <style>
+        :root {
+            --primary-color: #a445a4;
+            --secondary-color: #f36c9c;
+            --bg-gradient: linear-gradient(135deg, #232336 0%, #a445a4 100%);
+            --text-color: #f3f3f3;
+            --shadow: 0 4px 32px rgba(164, 69, 164, 0.67);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --glass-bg: rgba(35, 35, 54, 0.95);
+            --card-bg: rgba(24, 24, 36, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .articles-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 4rem;
+        }
+
+        .articles-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .articles-header h1 {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .articles-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .article-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(164, 69, 164, 0.2);
+        }
+
+        .article-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .article-content {
+            padding: 1.5rem;
+        }
+
+        .article-date {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .article-title {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .article-excerpt {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1.5rem;
+        }
+
+        .read-more {
+            display: inline-block;
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .read-more:hover {
+            transform: translateX(5px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .articles-container {
+                padding-top: 2rem;
+            }
+
+            .articles-header h1 {
+                font-size: 2rem;
+            }
+
+            .articles-grid {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="articles-container">
+        <div class="articles-header">
+            <h1>Articles</h1>
+            <p>Découvrez nos derniers articles sur la beauté et le bien-être</p>
+        </div>
+
+        <div class="articles-grid">
+            <article class="article-card">
+                <img src="article1.jpg" alt="Article 1" class="article-image">
+                <div class="article-content">
+                    <div class="article-date">15 Mars 2024</div>
+                    <h2 class="article-title">Les bienfaits des soins naturels pour la peau</h2>
+                    <p class="article-excerpt">Découvrez comment les ingrédients naturels peuvent transformer votre routine de soins...</p>
+                    <a href="#" class="read-more">Lire la suite <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </article>
+
+            <article class="article-card">
+                <img src="article2.jpg" alt="Article 2" class="article-image">
+                <div class="article-content">
+                    <div class="article-date">10 Mars 2024</div>
+                    <h2 class="article-title">Comment prendre soin de ses cheveux en hiver</h2>
+                    <p class="article-excerpt">Les conseils essentiels pour maintenir vos cheveux en bonne santé pendant la saison froide...</p>
+                    <a href="#" class="read-more">Lire la suite <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </article>
+
+            <article class="article-card">
+                <img src="article3.jpg" alt="Article 3" class="article-image">
+                <div class="article-content">
+                    <div class="article-date">5 Mars 2024</div>
+                    <h2 class="article-title">Les tendances beauté du printemps 2024</h2>
+                    <p class="article-excerpt">Les nouvelles tendances et innovations en matière de soins et de beauté...</p>
+                    <a href="#" class="read-more">Lire la suite <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </article>
+        </div>
+    </div>
+</body>
+</html> 

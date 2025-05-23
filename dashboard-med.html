@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord - Dr Kemmouche</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #a445a4;
+            --secondary-color: #f36c9c;
+            --bg-gradient: linear-gradient(135deg, #232336 0%, #a445a4 100%);
+            --text-color: #f3f3f3;
+            --shadow: 0 4px 32px rgba(164, 69, 164, 0.67);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --glass-bg: rgba(35, 35, 54, 0.95);
+            --card-bg: rgba(24, 24, 36, 0.8);
+            --success-color: #4CAF50;
+            --warning-color: #FFC107;
+            --danger-color: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('pattern.png') repeat;
+            opacity: 0.1;
+            animation: patternMove 20s linear infinite;
+            z-index: 0;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .logo img {
+            height: 50px;
+            transition: var(--transition);
+            filter: drop-shadow(0 0 10px rgba(164, 69, 164, 0.5));
+        }
+
+        .logo img:hover {
+            transform: scale(1.05) rotate(-2deg);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: var(--transition);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            min-height: 100vh;
+            padding: 2rem;
+            padding-top: 100px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dashboard-container {
+            display: flex;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 300px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            height: fit-content;
+            border: 1px solid rgba(164, 69, 164, 0.2);
+        }
+
+        .doctor-profile {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(164, 69, 164, 0.2);
+        }
+
+        .doctor-profile img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 0 20px rgba(164, 69, 164, 0.3);
+        }
+
+        .doctor-profile h3 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .doctor-profile p {
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .dashboard-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .dashboard-nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 1rem;
+            border-radius: 12px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 500;
+        }
+
+        .dashboard-nav a i {
+            width: 24px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        .dashboard-nav a:hover,
+        .dashboard-nav a.active {
+            background: rgba(164, 69, 164, 0.1);
+            color: var(--secondary-color);
+            transform: translateX(5px);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(164, 69, 164, 0.2);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(164, 69, 164, 0.2);
+        }
+
+        .dashboard-header h2 {
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+            text-shadow: 0 0 20px rgba(243, 108, 156, 0.3);
+        }
+
+        .date-filter input {
+            background: var(--card-bg);
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .date-filter input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 15px rgba(243, 108, 156, 0.3);
+        }
+
+        /* Dashboard Section Styles */
+        .dashboard-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(164, 69, 164, 0.2);
+            transition: var(--transition);
+        }
+
+        .dashboard-section:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .dashboard-section h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.4rem;
+        }
+
+        .dashboard-section h3 i {
+            font-size: 1.6rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-color);
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 2px solid var(--primary-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 15px rgba(243, 108, 156, 0.3);
+        }
+
+        /* Button Styles */
+        .btn {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(164, 69, 164, 0.4);
+        }
+
+        .btn i {
+            font-size: 1.1rem;
+        }
+
+        /* Card Styles */
+        .appointment-card,
+        .article-card,
+        .patient-card,
+        .unavailable-slot {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(164, 69, 164, 0.2);
+            transition: var(--transition);
+        }
+
+        .appointment-card:hover,
+        .article-card:hover,
+        .patient-card:hover,
+        .unavailable-slot:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(164, 69, 164, 0.2);
+        }
+
+        .appointment-info h4,
+        .article-card h4,
+        .patient-card h4 {
+            color: var(--secondary-color);
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+        }
+
+        .appointment-info p,
+        .article-card p,
+        .patient-card p {
+            color: var(--text-color);
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .appointment-info p i,
+        .patient-card p i {
+            color: var(--primary-color);
+            width: 20px;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-confirmed {
+            background: rgba(76, 175, 80, 0.2);
+            color: var(--success-color);
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: var(--warning-color);
+        }
+
+        .status-cancelled {
+            background: rgba(244, 67, 54, 0.2);
+            color: var(--danger-color);
+        }
+
+        /* Action Buttons */
+        .appointment-actions,
+        .article-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .btn-action {
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-confirm {
+            background: linear-gradient(90deg, var(--success-color), #81C784);
+        }
+
+        .btn-cancel {
+            background: linear-gradient(90deg, var(--danger-color), #E57373);
+        }
+
+        /* Search Input */
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 2px solid var(--primary-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 15px rgba(243, 108, 156, 0.3);
+        }
+
+        /* Medical Record Styles */
+        .medical-record-details {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .patient-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(164, 69, 164, 0.2);
+        }
+
+        .medical-record-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(164, 69, 164, 0.2);
+            padding-bottom: 1rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .tab-btn:hover {
+            background: rgba(164, 69, 164, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .tab-btn.active {
+            background: rgba(164, 69, 164, 0.2);
+            color: var(--secondary-color);
+        }
+
+        .tab-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes patternMove {
+            from { background-position: 0 0; }
+            to { background-position: 100% 100%; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                margin-bottom: 2rem;
+            }
+
+            .dashboard-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .dashboard-nav a {
+                flex: 1;
+                min-width: 200px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .dashboard {
+                padding: 1rem;
+                padding-top: 80px;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .appointment-actions,
+            .article-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Dropdown Styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            min-width: 200px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            border: 1px solid rgba(164, 69, 164, 0.2);
+            padding: 0.5rem 0;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 0.8rem 1.5rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover {
+            background: rgba(164, 69, 164, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        .dropdown-trigger {
+            cursor: pointer;
+        }
+
+        .dropdown-trigger::after {
+            content: '\f107';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            margin-left: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .dropdown:hover .dropdown-trigger::after {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html">
+                <img src="logo.png" alt="Dr Kemmouche Logo">
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Accueil</a>
+            <a href="index.html#about">À propos</a>
+            <a href="index.html#cabinet">Cabinet</a>
+            <div class="dropdown">
+                <a href="#" class="dropdown-trigger">Soins</a>
+                <div class="dropdown-content">
+                    <a href="soins-peau.html">Soins pour la peau</a>
+                    <a href="soins-cheveux.html">Soins pour les cheveux</a>
+                </div>
+            </div>
+            <a href="articles.html">Articles</a>
+            <a href="temoignages.html">Témoignages</a>
+            <a href="rdv.html">Rendez-vous</a>
+            <a href="login.html">Connexion</a>
+        </div>
+    </nav>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard">
+        <div class="dashboard-container">
+            <div class="sidebar">
+                <div class="doctor-profile">
+                    <img src="Docteur K.jpg" alt="Dr Kemmouche">
+                    <h3>Dr Kemmouche</h3>
+                    <p>Médecin Esthétique</p>
+                </div>
+                <nav class="dashboard-nav">
+                    <a href="#appointments" class="active"><i class="fas fa-calendar-alt"></i> Rendez-vous</a>
+                    <a href="#articles"><i class="fas fa-newspaper"></i> Articles</a>
+                    <a href="#unavailable-slots"><i class="fas fa-calendar-times"></i> Créneaux indisponibles</a>
+                    <a href="#medical-records"><i class="fas fa-file-medical"></i> Dossiers médicaux</a>
+                    <a href="#settings"><i class="fas fa-cog"></i> Paramètres</a>
+                </nav>
+            </div>
+            
+            <div class="main-content">
+                <div class="dashboard-header">
+                    <h2>Tableau de bord</h2>
+                    <div class="date-filter">
+                        <input type="date" id="dateFilter">
+                    </div>
+                </div>
+
+                <!-- Appointments Section -->
+                <div class="dashboard-section" id="appointments">
+                    <h3><i class="fas fa-calendar-alt"></i> Rendez-vous</h3>
+                    <div class="appointments-list" id="appointmentsList">
+                        <!-- Les rendez-vous seront chargés dynamiquement ici -->
+                    </div>
+                </div>
+
+                <!-- Articles Section -->
+                <div class="dashboard-section" id="articles">
+                    <h3><i class="fas fa-newspaper"></i> Articles</h3>
+                    <form id="articleForm" class="form-group">
+                        <div class="form-group">
+                            <label for="articleTitle">Titre</label>
+                            <input type="text" id="articleTitle" name="articleTitle" autocomplete="off" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="articleContent">Contenu</label>
+                            <textarea id="articleContent" name="articleContent" rows="6" autocomplete="off" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">
+                            <i class="fas fa-paper-plane"></i> Publier l'article
+                        </button>
+                    </form>
+                    <div class="articles-list" id="articlesList">
+                        <!-- Les articles seront chargés dynamiquement ici -->
+                    </div>
+                </div>
+
+                <!-- Unavailable Slots Section -->
+                <div class="dashboard-section" id="unavailable-slots">
+                    <h3><i class="fas fa-calendar-times"></i> Créneaux indisponibles</h3>
+                    <form id="unavailableSlotForm" class="form-group">
+                        <div class="form-group">
+                            <label for="unavailableDate">Date</label>
+                            <input type="date" id="unavailableDate" name="unavailableDate" autocomplete="off" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="unavailableTime">Heure</label>
+                            <input type="time" id="unavailableTime" name="unavailableTime" autocomplete="off" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="unavailableReason">Raison</label>
+                            <input type="text" id="unavailableReason" name="unavailableReason" autocomplete="off" required>
+                        </div>
+                        <button type="submit" class="btn">
+                            <i class="fas fa-plus"></i> Ajouter un créneau indisponible
+                        </button>
+                    </form>
+                    <div class="unavailable-slots" id="unavailableSlotsList">
+                        <!-- Les créneaux indisponibles seront chargés dynamiquement ici -->
+                    </div>
+                </div>
+
+                <!-- Medical Records Section -->
+                <div class="dashboard-section" id="medical-records">
+                    <h3><i class="fas fa-file-medical"></i> Dossiers médicaux</h3>
+                    
+                    <!-- Search Patient -->
+                    <div class="form-group">
+                        <input type="text" id="patientSearch" name="patientSearch" placeholder="Rechercher un patient..." class="search-input" autocomplete="off">
+                    </div>
+
+                    <!-- Patient List -->
+                    <div class="patients-list" id="patientsList">
+                        <!-- Les patients seront chargés dynamiquement ici -->
+                    </div>
+
+                    <!-- Medical Record Details -->
+                    <div class="medical-record-details" id="medicalRecordDetails" style="display: none;">
+                        <div class="patient-header">
+                            <h4 id="selectedPatientName"></h4>
+                            <button class="btn" onclick="generatePrescription()">
+                                <i class="fas fa-file-pdf"></i> Générer une ordonnance
+                            </button>
+                        </div>
+
+                        <div class="medical-record-tabs">
+                            <button class="tab-btn active" data-tab="history">Historique</button>
+                            <button class="tab-btn" data-tab="prescriptions">Ordonnances</button>
+                            <button class="tab-btn" data-tab="notes">Notes</button>
+                        </div>
+
+                        <div class="tab-content" id="historyTab">
+                            <div class="medical-history" id="medicalHistory">
+                                <!-- L'historique médical sera chargé dynamiquement ici -->
+                            </div>
+                            <button class="btn" onclick="addMedicalEntry()">
+                                <i class="fas fa-plus"></i> Ajouter une entrée
+                            </button>
+                        </div>
+
+                        <div class="tab-content" id="prescriptionsTab" style="display: none;">
+                            <div class="prescriptions-list" id="prescriptionsList">
+                                <!-- Les ordonnances seront chargées dynamiquement ici -->
+                            </div>
+                        </div>
+
+                        <div class="tab-content" id="notesTab" style="display: none;">
+                            <div class="notes-list" id="notesList">
+                                <!-- Les notes seront chargées dynamiquement ici -->
+                            </div>
+                            <button class="btn" onclick="addNote()">
+                                <i class="fas fa-plus"></i> Ajouter une note
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        // Charger les données initiales
+        console.log('Chargement des données...');
+        try {
+            await Promise.all([
+                loadAppointments(),
+                loadArticles(),
+                loadUnavailableSlots(),
+                loadPatients()
+            ]);
+            console.log('Données chargées avec succès');
+        } catch (error) {
+            console.error('Erreur lors du chargement des données:', error);
+        }
+
+        // Charger les rendez-vous
+        async function loadAppointments() {
+            try {
+                console.log('Début du chargement des rendez-vous...');
+                const response = await fetch('http://localhost:5000/api/rdvs', {
+                    method: 'GET',
+                    headers: { 
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                console.log('Statut de la réponse:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
+
+                const rdvs = await response.json();
+                console.log('Rendez-vous reçus:', rdvs);
+                
+                const appointmentsList = document.getElementById('appointmentsList');
+                if (!appointmentsList) {
+                    console.error('Élément appointmentsList non trouvé dans le DOM');
+                    return;
+                }
+
+                if (Array.isArray(rdvs) && rdvs.length > 0) {
+                    appointmentsList.innerHTML = rdvs.map(rdv => `
+                        <div class="appointment-card">
+                            <div class="appointment-info">
+                                <h4>${rdv.nomPatient || 'Patient'}</h4>
+                                <p>${rdv.typeSoin || 'Consultation'}</p>
+                                <p><i class="fas fa-calendar"></i> ${new Date(rdv.date).toLocaleDateString('fr-FR', { 
+                                    weekday: 'long', 
+                                    year: 'numeric', 
+                                    month: 'long', 
+                                    day: 'numeric' 
+                                })}</p>
+                                <p><i class="fas fa-clock"></i> ${rdv.heure}</p>
+                                <p><i class="fas fa-comment"></i> ${rdv.commentaire || 'Aucun commentaire'}</p>
+                                <p><i class="fas fa-info-circle"></i> Statut: ${rdv.statut || 'en_attente'}</p>
+                            </div>
+                            <div class="appointment-actions">
+                                <button class="btn" onclick="updateAppointmentStatus('${rdv._id}', 'confirme')">
+                                    <i class="fas fa-check"></i> Confirmer
+                                </button>
+                                <button class="btn" onclick="updateAppointmentStatus('${rdv._id}', 'annule')">
+                                    <i class="fas fa-times"></i> Annuler
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    appointmentsList.innerHTML = `
+                        <div class="no-rdv">
+                            <i class="fas fa-calendar-times"></i>
+                            <p>Aucun rendez-vous prévu</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Erreur détaillée lors du chargement des rendez-vous:', error);
+                const appointmentsList = document.getElementById('appointmentsList');
+                if (appointmentsList) {
+                    appointmentsList.innerHTML = `
+                        <div class="no-rdv">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <p>Erreur lors du chargement des rendez-vous</p>
+                            <p>Détails de l'erreur: ${error.message}</p>
+                            <button onclick="loadAppointments()" class="btn" style="margin-top: 1rem;">
+                                <i class="fas fa-sync-alt"></i> Réessayer
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // Charger les articles
+        async function loadArticles() {
+            try {
+                const response = await fetch('http://localhost:5000/api/articles', {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Erreur lors du chargement des articles');
+                
+                const articles = await response.json();
+                const articlesList = document.getElementById('articlesList');
+                
+                articlesList.innerHTML = articles.map(article => `
+                    <div class="article-card">
+                        <h4>${article.titre}</h4>
+                        <p>${article.contenu}</p>
+                        <div class="article-actions">
+                            <button class="btn" onclick="editArticle('${article.id}')">
+                                <i class="fas fa-edit"></i> Modifier
+                            </button>
+                            <button class="btn" onclick="deleteArticle('${article.id}')">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        // Charger les créneaux indisponibles
+        async function loadUnavailableSlots() {
+            try {
+                const response = await fetch('http://localhost:5000/api/unavailable-slots', {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Erreur lors du chargement des créneaux indisponibles');
+                
+                const slots = await response.json();
+                const slotsList = document.getElementById('unavailableSlotsList');
+                
+                slotsList.innerHTML = slots.map(slot => `
+                    <div class="unavailable-slot">
+                        <p><i class="fas fa-calendar"></i> ${new Date(slot.date).toLocaleDateString('fr-FR')}</p>
+                        <p><i class="fas fa-clock"></i> ${slot.heure}</p>
+                        <p><i class="fas fa-info-circle"></i> ${slot.raison}</p>
+                        <button class="btn" onclick="deleteUnavailableSlot('${slot.id}')">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        // Gestionnaire de formulaire d'article
+        document.getElementById('articleForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const titre = document.getElementById('articleTitle').value;
+            const contenu = document.getElementById('articleContent').value;
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/articles', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ titre, contenu })
+                });
+                
+                if (!response.ok) throw new Error('Erreur lors de la publication de l\'article');
+                
+                document.getElementById('articleTitle').value = '';
+                document.getElementById('articleContent').value = '';
+                await loadArticles();
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        });
+
+        // Gestionnaire de formulaire de créneau indisponible
+        document.getElementById('unavailableSlotForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const date = document.getElementById('unavailableDate').value;
+            const heure = document.getElementById('unavailableTime').value;
+            const raison = document.getElementById('unavailableReason').value;
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/unavailable-slots', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ date, heure, raison })
+                });
+                
+                if (!response.ok) throw new Error('Erreur lors de l\'ajout du créneau indisponible');
+                
+                document.getElementById('unavailableDate').value = '';
+                document.getElementById('unavailableTime').value = '';
+                document.getElementById('unavailableReason').value = '';
+                await loadUnavailableSlots();
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        });
+
+        // Fonctions utilitaires
+        window.updateAppointmentStatus = async function(id, status) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/rdvs/${id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status })
+                });
+                
+                if (!response.ok) throw new Error('Erreur lors de la mise à jour du rendez-vous');
+                
+                await loadAppointments();
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        };
+
+        window.deleteArticle = async function(id) {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) return;
+            
+            try {
+                const response = await fetch(`http://localhost:5000/api/articles/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) throw new Error('Erreur lors de la suppression de l\'article');
+                
+                await loadArticles();
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        };
+
+        window.deleteUnavailableSlot = async function(id) {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer ce créneau indisponible ?')) return;
+            
+            try {
+                const response = await fetch(`http://localhost:5000/api/unavailable-slots/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) throw new Error('Erreur lors de la suppression du créneau indisponible');
+                
+                await loadUnavailableSlots();
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        };
+
+        // Mettre à jour les données quand la date change
+        document.getElementById('dateFilter').addEventListener('change', async function(e) {
+            const date = e.target.value;
+            try {
+                const response = await fetch(`http://localhost:5000/api/rdvs?date=${date}`, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Erreur lors du filtrage des rendez-vous');
+                
+                const appointments = await response.json();
+                const appointmentsList = document.getElementById('appointmentsList');
+                
+                appointmentsList.innerHTML = appointments.map(rdv => `
+                    <div class="appointment-card">
+                        <div class="appointment-info">
+                            <h4>${rdv.nomPatient}</h4>
+                            <p>${rdv.typeSoin || 'Consultation'}</p>
+                            <p><i class="fas fa-calendar"></i> ${new Date(rdv.date).toLocaleDateString('fr-FR')}</p>
+                            <p><i class="fas fa-clock"></i> ${rdv.heure}</p>
+                        </div>
+                        <div class="appointment-actions">
+                            <button class="btn" onclick="updateAppointmentStatus('${rdv.id}', 'confirmed')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn" onclick="updateAppointmentStatus('${rdv.id}', 'cancelled')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        });
+
+        // Fonctions pour les dossiers médicaux
+        let selectedPatientId = null;
+
+        async function loadPatients() {
+            try {
+                console.log('Début du chargement des patients...');
+                const response = await fetch('http://localhost:5000/api/patients', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                console.log('Statut de la réponse patients:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
+
+                const patients = await response.json();
+                console.log('Patients reçus:', patients);
+                
+                const patientsList = document.getElementById('patientsList');
+                if (!patientsList) {
+                    console.error('Élément patientsList non trouvé dans le DOM');
+                    return;
+                }
+
+                if (Array.isArray(patients) && patients.length > 0) {
+                    patientsList.innerHTML = patients.map(patient => `
+                        <div class="patient-card" onclick="selectPatient('${patient._id}')">
+                            <h4>${patient.nom} ${patient.prenom}</h4>
+                            <p><i class="fas fa-calendar"></i> ${new Date(patient.dateNaissance).toLocaleDateString('fr-FR')}</p>
+                            <p><i class="fas fa-phone"></i> ${patient.tel || 'Non renseigné'}</p>
+                            <p><i class="fas fa-envelope"></i> ${patient.email || 'Non renseigné'}</p>
+                        </div>
+                    `).join('');
+                } else {
+                    patientsList.innerHTML = `
+                        <div class="no-rdv">
+                            <i class="fas fa-user-slash"></i>
+                            <p>Aucun patient trouvé</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Erreur détaillée lors du chargement des patients:', error);
+                const patientsList = document.getElementById('patientsList');
+                if (patientsList) {
+                    patientsList.innerHTML = `
+                        <div class="no-rdv">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <p>Erreur lors du chargement des patients</p>
+                            <p>Détails de l'erreur: ${error.message}</p>
+                            <button onclick="loadPatients()" class="btn" style="margin-top: 1rem;">
+                                <i class="fas fa-sync-alt"></i> Réessayer
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        async function selectPatient(patientId) {
+            try {
+                console.log('Sélection du patient:', patientId);
+                selectedPatientId = patientId;
+                const detailsSection = document.getElementById('medicalRecordDetails');
+                detailsSection.style.display = 'block';
+                
+                const response = await fetch(`http://localhost:5000/api/patients/${patientId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                console.log('Statut de la réponse:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
+
+                const patient = await response.json();
+                console.log('Détails du patient reçus:', patient);
+                
+                document.getElementById('selectedPatientName').textContent = `${patient.nom} ${patient.prenom}`;
+                
+                await Promise.all([
+                    loadMedicalHistory(patientId),
+                    loadPrescriptions(patientId),
+                    loadNotes(patientId)
+                ]);
+            } catch (error) {
+                console.error('Erreur détaillée lors du chargement du dossier médical:', error);
+                document.getElementById('medicalRecordDetails').innerHTML = `
+                    <div class="no-rdv">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Erreur lors du chargement du dossier médical</p>
+                        <p>Détails de l'erreur: ${error.message}</p>
+                        <button onclick="selectPatient('${patientId}')" class="btn" style="margin-top: 1rem;">
+                            <i class="fas fa-sync-alt"></i> Réessayer
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadMedicalHistory(patientId) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/patients/${patientId}/history`, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Erreur lors du chargement de l\'historique médical');
+                
+                const history = await response.json();
+                const historyContainer = document.getElementById('medicalHistory');
+                
+                historyContainer.innerHTML = history.map(entry => `
+                    <div class="medical-entry">
+                        <h5>${new Date(entry.date).toLocaleDateString('fr-FR')}</h5>
+                        <p>${entry.description}</p>
+                        <p><strong>Diagnostic:</strong> ${entry.diagnostic}</p>
+                        <p><strong>Traitement:</strong> ${entry.traitement}</p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        async function loadPrescriptions(patientId) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/patients/${patientId}/prescriptions`, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Erreur lors du chargement des ordonnances');
+                
+                const prescriptions = await response.json();
+                const prescriptionsList = document.getElementById('prescriptionsList');
+                
+                prescriptionsList.innerHTML = prescriptions.map(prescription => `
+                    <div class="prescription-item">
+                        <div>
+                            <h5>${new Date(prescription.date).toLocaleDateString('fr-FR')}</h5>
+                            <p>${prescription.description}</p>
+                        </div>
+                        <button class="btn" onclick="downloadPrescription('${prescription.id}')">
+                            <i class="fas fa-download"></i> Télécharger
+                        </button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        async function loadNotes(patientId) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/patients/${patientId}/notes`, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Erreur lors du chargement des notes');
+                
+                const notes = await response.json();
+                const notesList = document.getElementById('notesList');
+                
+                notesList.innerHTML = notes.map(note => `
+                    <div class="note-item">
+                        <h5>${new Date(note.date).toLocaleDateString('fr-FR')}</h5>
+                        <p>${note.contenu}</p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        async function generatePrescription() {
+            if (!selectedPatientId) return;
+            
+            try {
+                const response = await fetch(`http://localhost:5000/api/prescriptions/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ patientId: selectedPatientId })
+                });
+                
+                if (!response.ok) throw new Error('Erreur lors de la génération de l\'ordonnance');
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `ordonnance_${selectedPatientId}_${new Date().toISOString().split('T')[0]}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                
+                await loadPrescriptions(selectedPatientId);
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        // Gestion des onglets
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                const tabId = button.dataset.tab + 'Tab';
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.style.display = 'none';
+                });
+                document.getElementById(tabId).style.display = 'block';
+            });
+        });
+
+        // Recherche de patients
+        document.getElementById('patientSearch').addEventListener('input', async (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const patientCards = document.querySelectorAll('.patient-card');
+            
+            patientCards.forEach(card => {
+                const patientName = card.querySelector('h4').textContent.toLowerCase();
+                card.style.display = patientName.includes(searchTerm) ? 'block' : 'none';
+            });
+        });
+    });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compléter mes informations - Dr Kemmouche</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/infos-patient.css">
+    <style>
+        .register-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #232336 0%, #a445a4 100%);
+            padding: 2rem;
+            padding-top: 100px;
+        }
+        .register-container {
+            background: #232336;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 32px #a445a4aa, 0 2px 8px #000a;
+            width: 100%;
+            max-width: 600px;
+            animation: fadeIn 1.2s;
+        }
+        .register-container h2 {
+            text-align: center;
+            color: #f36c9c;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+        }
+        .register-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .register-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #a445a4;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .register-form input,
+        .register-form textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #a445a4;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #181824;
+            color: #f3f3f3;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .register-form textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .register-form input:focus,
+        .register-form textarea:focus {
+            outline: none;
+            border-color: #f36c9c;
+            box-shadow: 0 0 8px #f36c9c88;
+        }
+        .register-form .btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: linear-gradient(90deg, #a445a4 0%, #f36c9c 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 8px #a445a455;
+            transition: background 0.3s, transform 0.2s;
+            margin-top: 0.5rem;
+        }
+        .register-form .btn:hover {
+            background: linear-gradient(90deg, #f36c9c 0%, #a445a4 100%);
+            transform: scale(1.05);
+        }
+        .form-group i {
+            margin-right: 8px;
+            color: #a445a4;
+        }
+        .success-message {
+            display: none;
+            background: #4CAF50;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+            animation: fadeIn 0.5s;
+        }
+        .error-message {
+            display: none;
+            background: #f44336;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 1.5rem;
+            }
+            .register-container h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="logo.png" alt="Logo Dr Kemmouche">
+        </div>
+        <div class="nav-links">
+            <a href="index1.html">Accueil</a>
+            <div class="dropdown">
+                <a href="#" class="dropdown-trigger">Soins</a>
+                <div class="dropdown-content">
+                    <a href="soins-peau.html">Soins pour la peau</a>
+                    <a href="soins-cheveux.html">Soins pour les cheveux</a>
+                </div>
+            </div>
+            <a href="articles.html">Articles</a>
+            <a href="temoignages.html">Témoignages</a>
+            <a href="rdv1.html">Prendre un RDV</a>
+            <a href="dashboard-patient.html" id="monEspaceLink" style="display: none;">Mon espace</a>
+        </div>
+        <div class="user-menu" id="userMenuContainer" style="display: none;">
+            <div class="dropdown">
+                <a href="#" class="dropdown-trigger" id="userName"></a>
+                <div class="dropdown-content">
+                    <a href="dashboard1.html" id="dashboardLink" style="display: none;">Tableau de bord</a>
+                    <a href="dashboard-patient.html" id="patientDashboardLink" style="display: none;">Mon espace</a>
+                    <a href="#" id="logoutBtn">Déconnexion</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="register-section">
+        <div class="register-container">
+            <h2>Compléter mes informations</h2>
+            <div id="successMessage" class="success-message">
+                <i class="fas fa-check-circle"></i> Informations enregistrées avec succès !
+            </div>
+            <div id="errorMessage" class="error-message">
+                <i class="fas fa-exclamation-circle"></i> <span id="errorText"></span>
+            </div>
+            <form id="infosForm" class="register-form">
+                <div class="form-group">
+                    <label for="allergies"><i class="fas fa-allergies"></i>Allergies</label>
+                    <input type="text" id="allergies" name="allergies" placeholder="Listez vos allergies (séparées par des virgules)">
+                </div>
+                <div class="form-group">
+                    <label for="medicaments"><i class="fas fa-pills"></i>Médicaments en cours</label>
+                    <input type="text" id="medicaments" name="medicaments" placeholder="Listez vos médicaments actuels">
+                </div>
+                <div class="form-group">
+                    <label for="antecedents"><i class="fas fa-notes-medical"></i>Antécédents médicaux</label>
+                    <textarea id="antecedents" name="antecedents" placeholder="Décrivez vos antécédents médicaux"></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        if (!localStorage.getItem('token')) {
+            window.location.href = 'login1.html';
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const monEspaceLink = document.getElementById('monEspaceLink');
+        
+        if (token && user.role === 'patient') {
+            monEspaceLink.style.display = 'inline-block';
+        }
+
+        // Récupérer les informations existantes
+        try {
+            const response = await fetch('/api/patient/info', {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('allergies').value = data.allergies || '';
+                document.getElementById('medicaments').value = data.medicaments || '';
+                document.getElementById('antecedents').value = data.antecedents || '';
+            }
+        } catch (error) {
+            console.error('Erreur lors de la récupération des informations:', error);
+        }
+
+        // Gestion du formulaire
+        document.getElementById('infosForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement...';
+
+            try {
+                const allergies = document.getElementById('allergies').value;
+                const medicaments = document.getElementById('medicaments').value;
+                const antecedents = document.getElementById('antecedents').value;
+
+                const response = await fetch('/api/patient/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        email: user.email,
+                        allergies,
+                        medicaments,
+                        antecedents
+                    })
+                });
+
+                if (response.ok) {
+                    successMessage.style.display = 'block';
+                    errorMessage.style.display = 'none';
+                    
+                    // Redirection après 2 secondes
+                    setTimeout(() => {
+                        window.location.href = 'dashboard-patient.html';
+                    }, 2000);
+                } else {
+                    const data = await response.json();
+                    errorText.textContent = data.error || 'Erreur lors de l\'enregistrement';
+                    errorMessage.style.display = 'block';
+                    successMessage.style.display = 'none';
+                }
+            } catch (error) {
+                errorText.textContent = 'Erreur de connexion au serveur';
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Enregistrer';
+            }
+        });
+    });
+    </script>
+</body>
+</html> 
