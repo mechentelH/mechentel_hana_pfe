@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - Dr Kemmouche</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #a445a4;
+            --secondary-color: #f36c9c;
+            --bg-gradient: linear-gradient(135deg, #232336 0%, #a445a4 100%);
+            --text-color: #f3f3f3;
+            --shadow: 0 4px 32px rgba(164, 69, 164, 0.67);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --glass-bg: rgba(35, 35, 54, 0.95);
+            --card-bg: rgba(24, 24, 36, 0.8);
+            --success-color: #4CAF50;
+            --warning-color: #FFC107;
+            --danger-color: #f44336;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+        .main-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            background: var(--glass-bg);
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        .doctor-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 4px 24px rgba(164, 69, 164, 0.3);
+            border: 4px solid var(--primary-color);
+            background: #fff;
+        }
+        .header-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .header-info h1 {
+            font-size: 2rem;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header-info p {
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        .dashboard-actions {
+            margin-left: auto;
+        }
+        .btn {
+            padding: 0.8rem 1.5rem;
+            background: rgba(164, 69, 164, 0.2);
+            border: none;
+            border-radius: 12px;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-weight: 500;
+        }
+        .btn:hover {
+            background: rgba(164, 69, 164, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(164, 69, 164, 0.3);
+        }
+        .btn i {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .dashboard-card {
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 1.8rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(164, 69, 164, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 32px rgba(164, 69, 164, 0.3);
+        }
+        .dashboard-card:hover::before {
+            opacity: 1;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .card-title {
+            font-size: 1.3rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(164, 69, 164, 0.15);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .dashboard-card:hover .card-icon {
+            transform: scale(1.1);
+            background: rgba(164, 69, 164, 0.25);
+        }
+        .card-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card-description {
+            opacity: 0.8;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .rdvs-section {
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(164, 69, 164, 0.2);
+        }
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .rdvs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        .rdv-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(164, 69, 164, 0.1);
+            position: relative;
+        }
+        .rdv-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(164, 69, 164, 0.2);
+            border-color: rgba(164, 69, 164, 0.3);
+        }
+        .rdv-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .rdv-card p {
+            margin: 0.5rem 0;
+            color: var(--text-color);
+            opacity: 0.9;
+        }
+        .rdv-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1.2rem;
+        }
+        .btn-action {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+        .btn-confirm {
+            background: var(--success-color);
+            color: #fff;
+        }
+        .btn-cancel {
+            background: var(--danger-color);
+            color: #fff;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: var(--warning-color);
+        }
+        .status-confirmed {
+            background: rgba(76, 175, 80, 0.2);
+            color: var(--success-color);
+        }
+        .status-cancelled {
+            background: rgba(244, 67, 54, 0.2);
+            color: var(--danger-color);
+        }
+        .patients-section {
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        .patients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        .patient-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(164, 69, 164, 0.1);
+        }
+        .patient-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(164, 69, 164, 0.2);
+            border-color: rgba(164, 69, 164, 0.3);
+        }
+        .patient-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(164, 69, 164, 0.2);
+        }
+        .patient-name {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+        .patient-info {
+            margin: 0.5rem 0;
+            font-size: 0.95rem;
+        }
+        .patient-info strong {
+            color: var(--secondary-color);
+        }
+        .patient-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .btn-edit {
+            background: var(--primary-color);
+            color: #fff;
+        }
+        .btn-ordonnance {
+            background: var(--success-color);
+            color: #fff;
+        }
+        .btn-dossier {
+            background: var(--warning-color);
+            color: #fff;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            margin: 2rem auto;
+            box-shadow: var(--shadow);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+        }
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: 1px solid rgba(164, 69, 164, 0.2);
+            background: var(--card-bg);
+            color: var(--text-color);
+        }
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .rdvs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="main-content">
+        <div class="header">
+            <img src="Docteur K.jpg" alt="Dr Kemmouche" class="doctor-photo">
+            <div class="header-info">
+                <h1>Dr Kemmouche</h1>
+                <p>Administratrice & Médecin spécialiste</p>
+            </div>
+            <div class="dashboard-actions">
+                <button class="btn" onclick="refreshRdvs()">
+                    <i class="fas fa-sync-alt"></i> Actualiser
+                </button>
+            </div>
+        </div>
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-calendar-check"></i> Rendez-vous</h3>
+                    <div class="card-icon"><i class="fas fa-calendar-check"></i></div>
+                </div>
+                <div class="card-value" id="totalRdvs">0</div>
+                <div class="card-description">Nombre total de rendez-vous</div>
+            </div>
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-users"></i> Patients</h3>
+                    <div class="card-icon"><i class="fas fa-users"></i></div>
+                </div>
+                <div class="card-value" id="totalPatients">0</div>
+                <div class="card-description">Nombre total de patients</div>
+            </div>
+        </div>
+
+        <!-- Nouvelle section pour la gestion des patients -->
+        <div class="patients-section">
+            <div class="section-header">
+                <h3 class="section-title"><i class="fas fa-users"></i> Gestion des Patients</h3>
+                <div class="section-actions">
+                    <button class="btn" onclick="refreshPatients()">
+                        <i class="fas fa-sync-alt"></i> Actualiser
+                    </button>
+                </div>
+            </div>
+            <div id="patientsGrid" class="patients-grid">
+                <!-- Les patients seront chargés dynamiquement ici -->
+            </div>
+        </div>
+
+        <div class="rdvs-section">
+            <div class="section-header">
+                <h3 class="section-title"><i class="fas fa-calendar-day"></i> Liste des rendez-vous</h3>
+            </div>
+            <div id="rdvsGrid" class="rdvs-grid">
+                <!-- Les rendez-vous seront chargés dynamiquement ici -->
+            </div>
+        </div>
+    </main>
+    <script>
+        function formatDate(dateString) {
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            return new Date(dateString).toLocaleDateString('fr-FR', options);
+        }
+        function createRdvCard(rdv) {
+            const statusClass = {
+                'en_attente': 'status-pending',
+                'confirme': 'status-confirmed',
+                'annule': 'status-cancelled'
+            }[rdv.status] || 'status-pending';
+            const statusText = {
+                'en_attente': 'En attente',
+                'confirme': 'Confirmé',
+                'annule': 'Annulé'
+            }[rdv.status] || 'En attente';
+            return `
+                <div class="rdv-card">
+                    <h3><i class="fas fa-calendar"></i> Rendez-vous #${rdv.id}</h3>
+                    <p><strong>Patient:</strong> ${rdv.patient_name}</p>
+                    <p><strong>Date:</strong> ${formatDate(rdv.date)}</p>
+                    <p><strong>Service:</strong> ${rdv.service}</p>
+                    <p><strong>Statut:</strong> <span class="status-badge ${statusClass}">${statusText}</span></p>
+                    <div class="rdv-actions">
+                        ${rdv.status === 'en_attente' ? `
+                            <button class="btn-action btn-confirm" onclick="updateRdvStatus(${rdv.id}, 'confirme')">Confirmer</button>
+                            <button class="btn-action btn-cancel" onclick="updateRdvStatus(${rdv.id}, 'annule')">Annuler</button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+        async function loadRdvs() {
+            try {
+                const response = await fetch('/api/rdvs');
+                const rdvs = await response.json();
+                document.getElementById('totalRdvs').textContent = rdvs.length;
+                // Compter les patients uniques
+                const uniquePatients = new Set(rdvs.map(r => r.patient_name));
+                document.getElementById('totalPatients').textContent = uniquePatients.size;
+                const rdvsGrid = document.getElementById('rdvsGrid');
+                rdvsGrid.innerHTML = rdvs.map(rdv => createRdvCard(rdv)).join('');
+            } catch (error) {
+                console.error('Erreur lors du chargement des rendez-vous:', error);
+                alert('Erreur lors du chargement des rendez-vous');
+            }
+        }
+        async function updateRdvStatus(rdvId, newStatus) {
+            try {
+                const response = await fetch(`/api/rdvs/${rdvId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ status: newStatus }),
+                });
+                if (response.ok) {
+                    await loadRdvs();
+                } else {
+                    throw new Error('Erreur lors de la mise à jour du rendez-vous');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la mise à jour du rendez-vous');
+            }
+        }
+        function refreshRdvs() {
+            loadRdvs();
+        }
+
+        // Fonctions pour la gestion des patients
+        function createPatientCard(patient) {
+            return `
+                <div class="patient-card">
+                    <div class="patient-header">
+                        <h3 class="patient-name">${patient.nom}</h3>
+                        <span class="status-badge">${patient.role}</span>
+                    </div>
+                    <div class="patient-info">
+                        <p><strong>Email:</strong> ${patient.email}</p>
+                        <p><strong>Téléphone:</strong> ${patient.telephone}</p>
+                        <p><strong>Date de naissance:</strong> ${formatDate(patient.dateNaissance)}</p>
+                        <p><strong>Sexe:</strong> ${patient.sexe}</p>
+                        <p><strong>Adresse:</strong> ${patient.adresse}</p>
+                    </div>
+                    <div class="patient-actions">
+                        <button class="btn-action btn-edit" onclick="openEditModal(${patient.patientId})">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                        <button class="btn-action btn-ordonnance" onclick="generateOrdonnance(${patient.patientId})">
+                            <i class="fas fa-file-medical"></i> Ordonnance
+                        </button>
+                        <button class="btn-action btn-dossier" onclick="generateDossier(${patient.patientId})">
+                            <i class="fas fa-folder-medical"></i> Dossier médical
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function loadPatients() {
+            try {
+                const response = await fetch('/api/patients');
+                const patients = await response.json();
+                document.getElementById('totalPatients').textContent = patients.length;
+                const patientsGrid = document.getElementById('patientsGrid');
+                patientsGrid.innerHTML = patients.map(patient => createPatientCard(patient)).join('');
+            } catch (error) {
+                console.error('Erreur lors du chargement des patients:', error);
+                alert('Erreur lors du chargement des patients');
+            }
+        }
+
+        function openEditModal(patientId) {
+            fetch(`/api/patients/${patientId}`)
+                .then(response => response.json())
+                .then(patient => {
+                    const modal = document.createElement('div');
+                    modal.className = 'modal';
+                    modal.innerHTML = `
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Modifier les informations du patient</h3>
+                                <button class="close-modal" onclick="this.closest('.modal').remove()">&times;</button>
+                            </div>
+                            <form id="editPatientForm" onsubmit="updatePatient(event, ${patientId})">
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" name="email" value="${patient.email}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nom</label>
+                                    <input type="text" name="nom" value="${patient.nom}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date de naissance</label>
+                                    <input type="date" name="dateNaissance" value="${patient.dateNaissance}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Sexe</label>
+                                    <select name="sexe" required>
+                                        <option value="M" ${patient.sexe === 'M' ? 'selected' : ''}>Masculin</option>
+                                        <option value="F" ${patient.sexe === 'F' ? 'selected' : ''}>Féminin</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Téléphone</label>
+                                    <input type="tel" name="telephone" value="${patient.telephone}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Adresse</label>
+                                    <textarea name="adresse" required>${patient.adresse}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Allergies</label>
+                                    <textarea name="allergies">${patient.allergies || ''}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Médicaments</label>
+                                    <textarea name="medications">${patient.medications || ''}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Antécédents familiaux</label>
+                                    <textarea name="antecedentsFamiliaux">${patient.antecedentsFamiliaux || ''}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Antécédents personnels</label>
+                                    <textarea name="antecedentsPersonnels">${patient.antecedentsPersonnels || ''}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Contact d'urgence</label>
+                                    <textarea name="contactUrgence" required>${patient.contactUrgence}</textarea>
+                                </div>
+                                <button type="submit" class="btn-action btn-confirm">Enregistrer les modifications</button>
+                            </form>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                    modal.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert('Erreur lors du chargement des informations du patient');
+                });
+        }
+
+        async function updatePatient(event, patientId) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const patientData = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch(`/api/patients/${patientId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(patientData),
+                });
+
+                if (response.ok) {
+                    event.target.closest('.modal').remove();
+                    await loadPatients();
+                    alert('Patient mis à jour avec succès');
+                } else {
+                    throw new Error('Erreur lors de la mise à jour du patient');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la mise à jour du patient');
+            }
+        }
+
+        async function generateOrdonnance(patientId) {
+            try {
+                const response = await fetch(`/api/patients/${patientId}/ordonnance`);
+                const data = await response.json();
+                window.open(data.filePath, '_blank');
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la génération de l\'ordonnance');
+            }
+        }
+
+        async function generateDossier(patientId) {
+            try {
+                const response = await fetch(`/api/patients/${patientId}/dossier`);
+                const data = await response.json();
+                window.open(data.filePath, '_blank');
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la génération du dossier médical');
+            }
+        }
+
+        function refreshPatients() {
+            loadPatients();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadRdvs();
+            loadPatients();
+        });
+    </script>
+</body>
+</html> 

@@ -6,6 +6,7 @@
     <title>Connexion - Dr Kemmouche</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
     <script src="js/navbar.js"></script>
     <style>
         :root {
@@ -29,129 +30,314 @@
         body {
             background: var(--bg-gradient);
             color: var(--text-color);
-            line-height: 1.6;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 2rem;
+            margin-top: 80px; /* Hauteur de la navbar */
         }
 
-        .login-container {
+        .auth-container {
+            width: 100%;
+            max-width: 450px;
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
-            padding: 2rem;
             border-radius: 20px;
-            width: 100%;
-            max-width: 400px;
+            padding: 2rem;
             box-shadow: var(--shadow);
             border: 1px solid rgba(164, 69, 164, 0.2);
+            animation: fadeIn 0.5s ease-out;
         }
 
-        .login-header {
+        .auth-header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
-        .login-header h1 {
+        .auth-logo {
+            width: 100px;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px rgba(164, 69, 164, 0.5));
+        }
+
+        .auth-header h1 {
+            font-size: 1.8rem;
             color: var(--secondary-color);
-            font-size: 2rem;
             margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(164, 69, 164, 0.3);
         }
 
-        .login-form {
+        .auth-header p {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .auth-form {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1rem;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.3rem;
         }
 
         .form-group label {
             font-weight: 500;
+            color: var(--text-color);
+            font-size: 0.9rem;
         }
 
         .form-group input {
             padding: 0.8rem;
-            border: 1px solid rgba(164, 69, 164, 0.2);
-            border-radius: 8px;
+            border: 2px solid rgba(164, 69, 164, 0.2);
+            border-radius: 12px;
             background: rgba(255, 255, 255, 0.1);
             color: var(--text-color);
             transition: var(--transition);
+            font-size: 0.9rem;
         }
 
         .form-group input:focus {
             outline: none;
             border-color: var(--secondary-color);
-            box-shadow: 0 0 0 2px rgba(243, 108, 156, 0.2);
+            box-shadow: 0 0 0 3px rgba(243, 108, 156, 0.2);
         }
 
-        .login-btn {
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            color: white;
+        .btn {
+            padding: 0.8rem;
             border: none;
-            border-radius: 8px;
-            padding: 1rem;
+            border-radius: 12px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
+            font-size: 0.9rem;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
-        .login-btn:hover {
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(164, 69, 164, 0.4);
         }
 
-        .login-footer {
-            text-align: center;
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
             margin-top: 1.5rem;
         }
 
-        .login-footer a {
-            color: var(--secondary-color);
-            text-decoration: none;
+        .action-btn {
+            padding: 0.8rem;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
             transition: var(--transition);
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
         }
 
-        .login-footer a:hover {
-            text-decoration: underline;
+        .btn-register {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(164, 69, 164, 0.2);
+        }
+
+        .btn-register:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            border-color: var(--secondary-color);
+        }
+
+        .btn-admin {
+            background: rgba(243, 108, 156, 0.2);
+            border: 2px solid var(--secondary-color);
+        }
+
+        .btn-admin:hover {
+            background: rgba(243, 108, 156, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(243, 108, 156, 0.3);
+        }
+
+        .error-message {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            color: #ff4444;
+            padding: 0.8rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            text-align: center;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @media (max-width: 768px) {
-            body {
+            .main-content {
                 padding: 1rem;
+                margin-top: 70px;
             }
 
-            .login-container {
+            .auth-container {
                 padding: 1.5rem;
+            }
+
+            .auth-header h1 {
+                font-size: 1.6rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-header">
-            <h1>Connexion</h1>
-            <p>Connectez-vous à votre compte</p>
-        </div>
-        <form class="login-form">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
+    <!-- La navbar sera automatiquement insérée ici par navbar.js -->
+    <div class="main-content">
+        <div class="auth-container">
+            <div class="auth-header">
+                <img src="logo.png" alt="Dr Kemmouche Logo" class="auth-logo">
+                <h1>Connexion</h1>
+                <p>Connectez-vous à votre compte</p>
             </div>
-            <div class="form-group">
-                <label for="password">Mot de passe</label>
-                <input type="password" id="password" name="password" required>
+            <div id="errorMessage" class="error-message"></div>
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Se connecter</button>
+            </form>
+            <div class="action-buttons">
+                <a href="inscription.html" class="action-btn btn-register">
+                    <i class="fas fa-user-plus"></i>
+                    Créer un compte
+                </a>
+                <a href="admin.html" class="action-btn btn-admin">
+                    <i class="fas fa-lock"></i>
+                    Accès Administration
+                </a>
             </div>
-            <button type="submit" class="login-btn">Se connecter</button>
-        </form>
-        <div class="login-footer">
-            <p>Pas encore de compte ? <a href="inscription.html">S'inscrire</a></p>
         </div>
     </div>
+
+    <script>
+        // Supprimer l'ancien code de chargement de la navbar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Le reste du code existant
+        });
+
+        // Gestion du formulaire de connexion
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const submitButton = e.target.querySelector('button[type="submit"]');
+
+            // Désactiver le bouton pendant la requête
+            submitButton.disabled = true;
+            submitButton.textContent = 'Connexion en cours...';
+            errorMessage.style.display = 'none';
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Erreur lors de la connexion');
+                }
+
+                // Stocker le token et les informations de l'utilisateur
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify({
+                    _id: data._id,
+                    patientId: data.patientId,
+                    email: data.email,
+                    nom: data.nom,
+                    dateNaissance: data.dateNaissance,
+                    sexe: data.sexe,
+                    telephone: data.telephone,
+                    adresse: data.adresse,
+                    allergies: data.allergies,
+                    medications: data.medications,
+                    antecedentsFamiliaux: data.antecedentsFamiliaux,
+                    antecedentsPersonnels: data.antecedentsPersonnels,
+                    contactUrgence: data.contactUrgence,
+                    role: data.role
+                }));
+
+                // Rediriger vers le dashboard approprié
+                if (data.role === 'medecin' || data.role === 'admin') {
+                    window.location.href = '/dashboard-med.html';
+                } else {
+                    window.location.href = '/dashboard-patient.html';
+                }
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                errorMessage.textContent = error.message;
+                errorMessage.style.display = 'block';
+            } finally {
+                // Réactiver le bouton
+                submitButton.disabled = false;
+                submitButton.textContent = 'Se connecter';
+            }
+        });
+    </script>
 </body>
 </html> 

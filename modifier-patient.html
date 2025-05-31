@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier Patient - Dr Kemmouche</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #a445a4;
+            --secondary-color: #f36c9c;
+            --bg-gradient: linear-gradient(135deg, #232336 0%, #a445a4 100%);
+            --text-color: #2c3e50;
+            --shadow: 0 4px 32px rgba(164, 69, 164, 0.67);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --success-color: #4CAF50;
+            --warning-color: #FFC107;
+            --danger-color: #f44336;
+            --border-radius: 16px;
+            --spacing: 1.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.4rem;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .form-container {
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-section h2 i {
+            color: var(--secondary-color);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(164, 69, 164, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: var(--transition);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            box-shadow: 0 4px 15px rgba(164, 69, 164, 0.2);
+        }
+
+        .btn i {
+            font-size: 1.3em;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: var(--text-color);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid rgba(164, 69, 164, 0.1);
+        }
+
+        .history-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .history-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .history-item-content {
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .history-item-content p {
+            margin: 0.3rem 0;
+        }
+
+        .history-item-content .changed-field {
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .history-item-content .old-value {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .history-item-content .new-value {
+            color: var(--success-color);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Modifier les informations du patient</h1>
+            <a href="listesPatients.html" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Retour à la liste
+            </a>
+        </div>
+
+        <div class="form-container">
+            <form id="patientForm">
+                <div class="form-section">
+                    <h2><i class="fas fa-user"></i> Informations personnelles</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nom">Nom</label>
+                            <input type="text" id="nom" name="nom" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateNaissance">Date de naissance</label>
+                            <input type="date" id="dateNaissance" name="dateNaissance" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sexe">Sexe</label>
+                            <select id="sexe" name="sexe" required>
+                                <option value="">Sélectionner</option>
+                                <option value="M">Masculin</option>
+                                <option value="F">Féminin</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-address-card"></i> Coordonnées</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telephone">Téléphone</label>
+                            <input type="tel" id="telephone" name="telephone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="adresse">Adresse</label>
+                            <textarea id="adresse" name="adresse" required></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-notes-medical"></i> Informations médicales</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="allergies">Allergies</label>
+                            <textarea id="allergies" name="allergies"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="medications">Médications actuelles</label>
+                            <textarea id="medications" name="medications"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="antecedentsFamiliaux">Antécédents familiaux</label>
+                            <textarea id="antecedentsFamiliaux" name="antecedentsFamiliaux"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="antecedentsPersonnels">Antécédents personnels</label>
+                            <textarea id="antecedentsPersonnels" name="antecedentsPersonnels"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-phone-alt"></i> Contact d'urgence</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="contactUrgenceNom">Nom du contact</label>
+                            <input type="text" id="contactUrgenceNom" name="contactUrgenceNom">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactUrgenceTelephone">Téléphone du contact</label>
+                            <input type="tel" id="contactUrgenceTelephone" name="contactUrgenceTelephone">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" onclick="window.location.href='listesPatients.html'" class="btn btn-secondary">
+                        <i class="fas fa-times"></i>
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn">
+                        <i class="fas fa-save"></i>
+                        Enregistrer les modifications
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Récupérer l'ID du patient depuis l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const patientId = urlParams.get('id');
+
+        // Charger les informations du patient
+        async function loadPatientData() {
+            try {
+                const response = await fetch(`http://localhost:5000/api/users/${patientId}`);
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
+                const patient = await response.json();
+                
+                // Remplir le formulaire avec les données du patient
+                document.getElementById('nom').value = patient.nom || '';
+                document.getElementById('dateNaissance').value = patient.dateNaissance ? new Date(patient.dateNaissance).toISOString().split('T')[0] : '';
+                document.getElementById('sexe').value = patient.sexe || '';
+                document.getElementById('email').value = patient.email || '';
+                document.getElementById('telephone').value = patient.telephone || '';
+                document.getElementById('adresse').value = patient.adresse || '';
+                document.getElementById('allergies').value = patient.allergies || '';
+                document.getElementById('medications').value = patient.medications || '';
+                document.getElementById('antecedentsFamiliaux').value = patient.antecedentsFamiliaux || '';
+                document.getElementById('antecedentsPersonnels').value = patient.antecedentsPersonnels || '';
+                
+                if (patient.contactUrgence) {
+                    document.getElementById('contactUrgenceNom').value = patient.contactUrgence.nom || '';
+                    document.getElementById('contactUrgenceTelephone').value = patient.contactUrgence.telephone || '';
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des données:', error);
+                alert('Erreur lors du chargement des données du patient');
+            }
+        }
+
+        // Gérer la soumission du formulaire
+        document.getElementById('patientForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                nom: document.getElementById('nom').value,
+                dateNaissance: document.getElementById('dateNaissance').value,
+                sexe: document.getElementById('sexe').value,
+                email: document.getElementById('email').value,
+                telephone: document.getElementById('telephone').value,
+                adresse: document.getElementById('adresse').value,
+                allergies: document.getElementById('allergies').value,
+                medications: document.getElementById('medications').value,
+                antecedentsFamiliaux: document.getElementById('antecedentsFamiliaux').value,
+                antecedentsPersonnels: document.getElementById('antecedentsPersonnels').value,
+                contactUrgence: {
+                    nom: document.getElementById('contactUrgenceNom').value,
+                    telephone: document.getElementById('contactUrgenceTelephone').value
+                }
+            };
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/users/${patientId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
+
+                alert('Les modifications ont été enregistrées avec succès');
+                window.location.href = 'listesPatients.html';
+            } catch (error) {
+                console.error('Erreur lors de la mise à jour:', error);
+                alert('Erreur lors de la mise à jour des informations');
+            }
+        });
+
+        // Charger les données du patient au chargement de la page
+        document.addEventListener('DOMContentLoaded', loadPatientData);
+    </script>
+</body>
+</html> 

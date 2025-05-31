@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordonnances - Dr Kemmouche</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #a445a4;
+            --secondary-color: #f36c9c;
+            --bg-gradient: linear-gradient(135deg, #232336 0%, #a445a4 100%);
+            --text-color: #2c3e50;
+            --shadow: 0 4px 32px rgba(164, 69, 164, 0.67);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --success-color: #4CAF50;
+            --warning-color: #FFC107;
+            --danger-color: #f44336;
+            --border-radius: 16px;
+            --spacing: 1.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--spacing);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.4rem;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: var(--transition);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            box-shadow: 0 4px 15px rgba(164, 69, 164, 0.2);
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            opacity: 0.9;
+        }
+
+        .ordonnances-list {
+            display: grid;
+            gap: 2rem;
+            padding: 1rem 0;
+        }
+
+        .ordonnance-item {
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .ordonnance-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .ordonnance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(164, 69, 164, 0.1);
+        }
+
+        .ordonnance-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .ordonnance-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .ordonnance-content {
+            margin-bottom: 1.5rem;
+        }
+
+        .medicaments-list {
+            margin: 1rem 0;
+        }
+
+        .medicament-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .medicament-name {
+            font-weight: 500;
+        }
+
+        .medicament-posologie {
+            color: #666;
+        }
+
+        .ordonnance-notes {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-style: italic;
+        }
+
+        .no-ordonnances {
+            text-align: center;
+            padding: 4rem;
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+            font-size: 1.4rem;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .no-ordonnances i {
+            font-size: 4rem;
+            color: var(--primary-color);
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .ordonnance-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-content {
+            position: relative;
+            background: var(--glass-bg);
+            margin: 20px auto;
+            padding: 2.5rem;
+            width: 95%;
+            max-width: 800px;
+            max-height: 90vh;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideIn 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 1.5rem;
+            top: 1.5rem;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(164, 69, 164, 0.1);
+        }
+
+        .close-modal:hover {
+            background: rgba(164, 69, 164, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .ordonnance-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .ordonnance-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .ordonnance-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(164, 69, 164, 0.1);
+        }
+
+        .medicament-input {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .medicament-input input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .medicament-input input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(164, 69, 164, 0.1);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 100px;
+            transition: var(--transition);
+        }
+
+        textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(164, 69, 164, 0.1);
+        }
+
+        .ordonnance-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .ordonnance-actions button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ordonnance-actions button.primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .ordonnance-actions button.secondary {
+            background: #f8f9fa;
+            color: var(--text-color);
+        }
+
+        .ordonnance-actions button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Liste des Ordonnances</h1>
+            <div class="header-actions">
+                <button onclick="openNewOrdonnanceModal()" class="btn">
+                    <i class="fas fa-plus"></i>
+                    Nouvelle Ordonnance
+                </button>
+                <a href="listesPatients.html" class="btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Retour à la liste des patients
+                </a>
+            </div>
+        </div>
+
+        <div class="ordonnances-list" id="ordonnancesList">
+            <!-- Les ordonnances seront ajoutées dynamiquement ici -->
+        </div>
+    </div>
+
+    <!-- Modal pour nouvelle ordonnance -->
+    <div id="ordonnanceModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div class="ordonnance-header">
+                <h2>Nouvelle Ordonnance</h2>
+                <p>Ajoutez les médicaments et leurs posologies</p>
+            </div>
+            <form id="ordonnanceForm" class="ordonnance-form">
+                <div class="ordonnance-section">
+                    <h3><i class="fas fa-user"></i> Patient</h3>
+                    <select id="patientSelect" required>
+                        <option value="">Sélectionnez un patient</option>
+                    </select>
+                </div>
+                <div class="ordonnance-section">
+                    <h3><i class="fas fa-pills"></i> Médicaments</h3>
+                    <div class="medicament-input">
+                        <input type="text" id="medicament" placeholder="Nom du médicament" />
+                        <input type="text" id="posologie" placeholder="Posologie" />
+                        <button type="button" onclick="addMedicament()" class="btn">
+                            <i class="fas fa-plus"></i>
+                            Ajouter
+                        </button>
+                    </div>
+                    <div id="medicamentList" class="medicament-list">
+                        <!-- Les médicaments seront ajoutés ici -->
+                    </div>
+                </div>
+                <div class="ordonnance-section">
+                    <h3><i class="fas fa-sticky-note"></i> Notes additionnelles</h3>
+                    <textarea id="notes" placeholder="Ajoutez des notes ou instructions supplémentaires..." rows="4"></textarea>
+                </div>
+                <div class="ordonnance-actions">
+                    <button type="button" onclick="closeModal()" class="secondary">
+                        <i class="fas fa-times"></i>
+                        Annuler
+                    </button>
+                    <button type="submit" class="primary">
+                        <i class="fas fa-save"></i>
+                        Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let medicaments = [];
+        const modal = document.getElementById('ordonnanceModal');
+
+        // Fonction pour charger les patients
+        async function loadPatients() {
+            try {
+                const response = await fetch('http://localhost:5000/api/users', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
+
+                const users = await response.json();
+                const patientSelect = document.getElementById('patientSelect');
+                
+                // Filtrer uniquement les patients
+                const patients = users.filter(user => user.role === 'patient');
+                
+                patientSelect.innerHTML = `
+                    <option value="">Sélectionnez un patient</option>
+                    ${patients.map(patient => `
+                        <option value="${patient._id}">${patient.nom} ${patient.prenom}</option>
+                    `).join('')}
+                `;
+            } catch (error) {
+                console.error('Erreur lors du chargement des patients:', error);
+                alert('Erreur lors du chargement des patients');
+            }
+        }
+
+        // Fonction pour ouvrir le modal
+        function openNewOrdonnanceModal() {
+            modal.style.display = 'block';
+            loadPatients();
+        }
+
+        // Fonction pour fermer le modal
+        function closeModal() {
+            modal.style.display = 'none';
+            document.getElementById('ordonnanceForm').reset();
+            medicaments = [];
+            updateMedicamentList();
+        }
+
+        // Fonction pour ajouter un médicament
+        function addMedicament() {
+            const medicamentInput = document.getElementById('medicament');
+            const posologieInput = document.getElementById('posologie');
+            const medicament = medicamentInput.value.trim();
+            const posologie = posologieInput.value.trim();
+
+            if (medicament && posologie) {
+                medicaments.push({ medicament, posologie });
+                updateMedicamentList();
+                medicamentInput.value = '';
+                posologieInput.value = '';
+                medicamentInput.focus();
+            } else {
+                alert('Veuillez remplir tous les champs');
+            }
+        }
+
+        // Fonction pour supprimer un médicament
+        function removeMedicament(index) {
+            medicaments.splice(index, 1);
+            updateMedicamentList();
+        }
+
+        // Fonction pour mettre à jour la liste des médicaments
+        function updateMedicamentList() {
+            const list = document.getElementById('medicamentList');
+            list.innerHTML = medicaments.map((med, index) => `
+                <div class="medicament-item">
+                    <div>
+                        <strong>${med.medicament}</strong>
+                        <span style="margin-left: 1rem; color: #666;">${med.posologie}</span>
+                    </div>
+                    <button onclick="removeMedicament(${index})" title="Supprimer">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Gestionnaire de soumission du formulaire
+        document.getElementById('ordonnanceForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const patientId = document.getElementById('patientSelect').value;
+            const notes = document.getElementById('notes').value.trim();
+
+            if (!patientId) {
+                alert('Veuillez sélectionner un patient');
+                return;
+            }
+
+            if (medicaments.length === 0) {
+                alert('Veuillez ajouter au moins un médicament');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5000/api/ordonnances', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({
+                        patientId,
+                        medicaments,
+                        notes
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la sauvegarde de l\'ordonnance');
+                }
+
+                const ordonnance = await response.json();
+                console.log('Ordonnance sauvegardée:', ordonnance);
+                
+                // Recharger la liste des ordonnances
+                loadOrdonnances();
+                
+                // Fermer le modal et réinitialiser le formulaire
+                closeModal();
+                
+                // Afficher un message de succès
+                alert('Ordonnance enregistrée avec succès');
+            } catch (error) {
+                console.error('Erreur lors de la sauvegarde de l\'ordonnance:', error);
+                alert('Erreur lors de la sauvegarde de l\'ordonnance');
+            }
+        });
+
+        // Fermer le modal si on clique en dehors
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // Fonction pour charger toutes les ordonnances
+        async function loadOrdonnances() {
+            try {
+                const response = await fetch('http://localhost:5000/api/ordonnances', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
+
+                const ordonnances = await response.json();
+                displayOrdonnances(ordonnances);
+            } catch (error) {
+                console.error('Erreur lors du chargement des ordonnances:', error);
+                alert('Erreur lors du chargement des ordonnances');
+            }
+        }
+
+        // Fonction pour afficher les ordonnances
+        function displayOrdonnances(ordonnances) {
+            const ordonnancesList = document.getElementById('ordonnancesList');
+            
+            if (!ordonnances || ordonnances.length === 0) {
+                ordonnancesList.innerHTML = `
+                    <div class="no-ordonnances">
+                        <i class="fas fa-prescription"></i>
+                        <p>Aucune ordonnance trouvée</p>
+                    </div>`;
+                return;
+            }
+
+            ordonnancesList.innerHTML = ordonnances.map(ordonnance => `
+                <div class="ordonnance-item">
+                    <div class="ordonnance-header">
+                        <div class="ordonnance-title">
+                            <i class="fas fa-user"></i>
+                            ${ordonnance.nomPatient}
+                        </div>
+                        <div class="ordonnance-date">
+                            <i class="fas fa-calendar"></i>
+                            ${new Date(ordonnance.date).toLocaleDateString()}
+                        </div>
+                    </div>
+                    <div class="ordonnance-content">
+                        <div class="medicaments-list">
+                            ${ordonnance.medicaments.map(med => `
+                                <div class="medicament-item">
+                                    <span class="medicament-name">${med.medicament}</span>
+                                    <span class="medicament-posologie">${med.posologie}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${ordonnance.notes ? `
+                            <div class="ordonnance-notes">
+                                <i class="fas fa-sticky-note"></i>
+                                ${ordonnance.notes}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Charger les ordonnances au chargement de la page
+        document.addEventListener('DOMContentLoaded', loadOrdonnances);
+    </script>
+</body>
+</html> 

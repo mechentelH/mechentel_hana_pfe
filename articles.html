@@ -6,6 +6,7 @@
     <title>Articles - Dr Kemmouche</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
     <script src="js/navbar.js"></script>
     <style>
         :root {
@@ -135,43 +136,76 @@
     </style>
 </head>
 <body>
+    <!-- La navbar sera automatiquement insérée ici par navbar.js -->
     <div class="articles-container">
         <div class="articles-header">
             <h1>Articles</h1>
             <p>Découvrez nos derniers articles sur la beauté et le bien-être</p>
         </div>
 
-        <div class="articles-grid">
-            <article class="article-card">
-                <img src="article1.jpg" alt="Article 1" class="article-image">
-                <div class="article-content">
-                    <div class="article-date">15 Mars 2024</div>
-                    <h2 class="article-title">Les bienfaits des soins naturels pour la peau</h2>
-                    <p class="article-excerpt">Découvrez comment les ingrédients naturels peuvent transformer votre routine de soins...</p>
-                    <a href="#" class="read-more">Lire la suite <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </article>
-
-            <article class="article-card">
-                <img src="article2.jpg" alt="Article 2" class="article-image">
-                <div class="article-content">
-                    <div class="article-date">10 Mars 2024</div>
-                    <h2 class="article-title">Comment prendre soin de ses cheveux en hiver</h2>
-                    <p class="article-excerpt">Les conseils essentiels pour maintenir vos cheveux en bonne santé pendant la saison froide...</p>
-                    <a href="#" class="read-more">Lire la suite <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </article>
-
-            <article class="article-card">
-                <img src="article3.jpg" alt="Article 3" class="article-image">
-                <div class="article-content">
-                    <div class="article-date">5 Mars 2024</div>
-                    <h2 class="article-title">Les tendances beauté du printemps 2024</h2>
-                    <p class="article-excerpt">Les nouvelles tendances et innovations en matière de soins et de beauté...</p>
-                    <a href="#" class="read-more">Lire la suite <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </article>
+        <div class="articles-grid" id="articlesGrid">
+            <!-- Les articles seront insérés ici dynamiquement -->
         </div>
     </div>
+
+    <script>
+        // Fonction pour formater la date
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('fr-FR', options);
+        }
+
+        // Fonction pour charger les articles
+        async function loadArticles() {
+            try {
+                const response = await fetch('http://localhost:5000/api/articles');
+                const articles = await response.json();
+                
+                const articlesGrid = document.getElementById('articlesGrid');
+                articlesGrid.innerHTML = ''; // Vider le conteneur
+
+                articles.forEach(article => {
+                    const articleCard = `
+                        <article class="article-card">
+                            <img src="${article.imageUrl}" alt="${article.title}" class="article-image">
+                            <div class="article-content">
+                                <div class="article-date">${formatDate(article.date)}</div>
+                                <h2 class="article-title">${article.title}</h2>
+                                <p class="article-excerpt">${article.excerpt}</p>
+                                <a href="#" class="read-more" onclick="showArticle('${article._id}')">
+                                    Lire la suite <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </article>
+                    `;
+                    articlesGrid.innerHTML += articleCard;
+                });
+            } catch (error) {
+                console.error('Erreur lors du chargement des articles:', error);
+                document.getElementById('articlesGrid').innerHTML = `
+                    <div class="error-message">
+                        Une erreur est survenue lors du chargement des articles.
+                    </div>
+                `;
+            }
+        }
+
+        // Fonction pour afficher un article complet
+        async function showArticle(id) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/articles/${id}`);
+                const article = await response.json();
+                
+                // Ici vous pouvez implémenter l'affichage de l'article complet
+                // Par exemple, ouvrir une modal ou rediriger vers une page dédiée
+                console.log('Article complet:', article);
+            } catch (error) {
+                console.error('Erreur lors du chargement de l\'article:', error);
+            }
+        }
+
+        // Charger les articles au chargement de la page
+        document.addEventListener('DOMContentLoaded', loadArticles);
+    </script>
 </body>
 </html> 

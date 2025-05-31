@@ -34,6 +34,7 @@
             flex-direction: column;
             position: relative;
             overflow-x: hidden;
+            padding-top: 6rem;
         }
 
         /* Navbar Styles */
@@ -102,6 +103,62 @@
             transform: translateY(-2px);
         }
 
+        /* Dropdown Styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            min-width: 200px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            border: 1px solid rgba(164, 69, 164, 0.2);
+            padding: 0.5rem 0;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 0.8rem 1.5rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover {
+            background: rgba(164, 69, 164, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        .dropdown-trigger {
+            cursor: pointer;
+        }
+
+        .dropdown-trigger::after {
+            content: '\f107';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            margin-left: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .dropdown:hover .dropdown-trigger::after {
+            transform: rotate(180deg);
+        }
+
         /* Main Content */
         .main-container {
             flex: 1;
@@ -111,7 +168,6 @@
             padding: 2rem;
             position: relative;
             z-index: 1;
-            margin-top: 80px;
         }
 
         /* Login Box Styles */
@@ -126,28 +182,36 @@
             position: relative;
             overflow: hidden;
             border: 1px solid rgba(164, 69, 164, 0.2);
+            animation: fadeIn 0.5s ease-out;
         }
 
         .login-header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
         .login-header h1 {
             color: var(--secondary-color);
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+            font-size: 2.2rem;
+            margin-bottom: 0.8rem;
+            text-shadow: 0 2px 10px rgba(164, 69, 164, 0.3);
+        }
+
+        .login-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-color);
+            margin-bottom: 0.8rem;
+            color: var(--secondary-color);
             font-weight: 500;
+            font-size: 1.1rem;
         }
 
         .input-group {
@@ -160,29 +224,40 @@
             top: 50%;
             transform: translateY(-50%);
             color: var(--primary-color);
+            font-size: 1.2rem;
         }
 
         .input-group input {
             width: 100%;
             padding: 1rem 1rem 1rem 3rem;
             border: 2px solid rgba(164, 69, 164, 0.2);
-            border-radius: 10px;
+            border-radius: 12px;
             background: rgba(255, 255, 255, 0.1);
             color: var(--text-color);
             font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(243, 108, 156, 0.2);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .btn {
             width: 100%;
-            padding: 1rem;
+            padding: 1.2rem;
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 1rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .btn:hover {
@@ -194,7 +269,7 @@
             background: rgba(255, 0, 0, 0.1);
             color: #ff6b6b;
             padding: 1rem;
-            border-radius: 10px;
+            border-radius: 12px;
             margin-bottom: 1.5rem;
             text-align: center;
             border: 1px solid rgba(255, 0, 0, 0.2);
@@ -204,16 +279,24 @@
         .login-footer {
             text-align: center;
             margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(164, 69, 164, 0.2);
         }
 
         .back-link {
             color: var(--text-color);
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .back-link:hover {
             color: var(--secondary-color);
+            transform: translateX(-5px);
         }
 
         @keyframes slideDown {
@@ -227,7 +310,33 @@
             }
         }
 
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         @media (max-width: 768px) {
+            body {
+                padding-top: 5rem;
+            }
+
             .navbar {
                 padding: 1rem;
             }
@@ -240,10 +349,15 @@
                 padding: 2rem;
                 margin: 1rem;
             }
+
+            .login-header h1 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="logo">
             <a href="index.html">
@@ -293,7 +407,9 @@
                 <div id="errorMessage" class="error-message"></div>
             </form>
             <div class="login-footer">
-                <a href="index.html" class="back-link">Retour à l'accueil</a>
+                <a href="index.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Retour à l'accueil
+                </a>
             </div>
         </div>
     </div>
@@ -308,10 +424,12 @@
             const submitButton = e.target.querySelector('button');
 
             try {
+                console.log('Tentative de connexion...');
                 submitButton.disabled = true;
                 submitButton.textContent = 'Connexion...';
 
-                const response = await fetch('/api/auth/login1', {
+                console.log('Envoi de la requête à /api/auth/login');
+                const response = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -319,21 +437,31 @@
                     body: JSON.stringify({ email, password })
                 });
 
+                console.log('Réponse reçue:', response.status);
                 const data = await response.json();
+                console.log('Données reçues:', data);
 
-                if (response.ok && data.user.role === 'admin') {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    window.location.href = 'dashboard-med.html';
+                if (response.ok) {
+                    if (data.role === 'admin') {
+                        console.log('Connexion admin réussie');
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('user', JSON.stringify(data));
+                        window.location.href = 'dashboard-med.html';
+                    } else {
+                        console.log('Utilisateur non admin');
+                        errorMessage.textContent = 'Accès non autorisé. Vous devez être administrateur.';
+                        errorMessage.style.display = 'block';
+                    }
                 } else {
-                    errorMessage.textContent = 'Identifiants incorrects';
+                    console.log('Erreur de connexion:', data.message);
+                    errorMessage.textContent = data.message || 'Erreur de connexion';
                     errorMessage.style.display = 'block';
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Se connecter';
                 }
             } catch (error) {
-                errorMessage.textContent = 'Erreur de connexion';
+                console.error('Erreur lors de la connexion:', error);
+                errorMessage.textContent = 'Erreur de connexion au serveur';
                 errorMessage.style.display = 'block';
+            } finally {
                 submitButton.disabled = false;
                 submitButton.textContent = 'Se connecter';
             }

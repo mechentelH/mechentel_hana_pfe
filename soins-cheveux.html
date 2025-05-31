@@ -9,46 +9,56 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/soins.css">
     <script src="js/navbar.js"></script>
-    <script src="js/main.js"></script>
 </head>
 <body>
+    <!-- La navbar sera automatiquement insérée ici par navbar.js -->
     <div class="soins-container">
         <div class="soins-header">
             <h1>Soins pour les cheveux</h1>
             <p>Découvrez nos soins personnalisés pour des cheveux en pleine santé</p>
         </div>
 
-        <div class="soins-grid">
-            <div class="soins-card">
-                <img src="cheveux1.jpg" alt="Soin capillaire" class="soins-image">
-                <div class="soins-content">
-                    <h2 class="soins-title">Soin capillaire</h2>
-                    <p class="soins-description">Un soin complet pour nourrir, hydrater et fortifier vos cheveux.</p>
-                    <div class="soins-price">À partir de 40€</div>
-                    <a href="rdv.html" class="book-btn">Prendre RDV</a>
-                </div>
-            </div>
-
-            <div class="soins-card">
-                <img src="cheveux2.jpg" alt="Lissage" class="soins-image">
-                <div class="soins-content">
-                    <h2 class="soins-title">Lissage</h2>
-                    <p class="soins-description">Lissage doux et durable pour des cheveux lisses et brillants.</p>
-                    <div class="soins-price">À partir de 70€</div>
-                    <a href="rdv.html" class="book-btn">Prendre RDV</a>
-                </div>
-            </div>
-
-            <div class="soins-card">
-                <img src="cheveux3.jpg" alt="Coloration" class="soins-image">
-                <div class="soins-content">
-                    <h2 class="soins-title">Coloration</h2>
-                    <p class="soins-description">Coloration professionnelle avec des produits de qualité.</p>
-                    <div class="soins-price">À partir de 60€</div>
-                    <a href="rdv.html" class="book-btn">Prendre RDV</a>
-                </div>
-            </div>
+        <div class="soins-grid" id="soinsGrid">
+            <!-- Le contenu sera chargé dynamiquement depuis l'API -->
         </div>
     </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Charger les soins des cheveux
+        async function loadSoinsCheveux() {
+            try {
+                const response = await fetch('/api/soins/type/cheveux');
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la récupération des soins');
+                }
+                const soins = await response.json();
+                const grid = document.getElementById('soinsGrid');
+                
+                if (soins.length === 0) {
+                    grid.innerHTML = '<p class="no-soins">Aucun soin disponible pour le moment.</p>';
+                    return;
+                }
+
+                grid.innerHTML = soins.map(soin => `
+                    <div class="soins-card">
+                        <img src="${soin.image}" alt="${soin.titre}" class="soins-image">
+                        <div class="soins-content">
+                            <h2 class="soins-title">${soin.titre}</h2>
+                            <p class="soins-description">${soin.description}</p>
+                            <div class="soins-price">À partir de ${soin.prix}€</div>
+                            <a href="rendez-vous.html" class="book-btn">Prendre RDV</a>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erreur lors du chargement des soins:', error);
+                const grid = document.getElementById('soinsGrid');
+                grid.innerHTML = '<p class="error-message">Une erreur est survenue lors du chargement des soins.</p>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadSoinsCheveux);
+    </script>
 </body>
 </html> 

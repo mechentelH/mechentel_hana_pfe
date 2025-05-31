@@ -9,145 +9,56 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/soins.css">
     <script src="js/navbar.js"></script>
-    <script src="js/main.js"></script>
-    <style>
-        .skin-care-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding-top: 4rem;
-        }
-
-        .skin-care-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .skin-care-header h1 {
-            font-size: 2.5rem;
-            color: var(--secondary-color);
-            margin-bottom: 1rem;
-        }
-
-        .skin-care-header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
-        .skin-care-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .skin-care-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: var(--transition);
-            border: 1px solid rgba(164, 69, 164, 0.2);
-        }
-
-        .skin-care-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow);
-        }
-
-        .skin-care-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .skin-care-content {
-            padding: 1.5rem;
-        }
-
-        .skin-care-title {
-            font-size: 1.5rem;
-            color: var(--secondary-color);
-            margin-bottom: 1rem;
-        }
-
-        .skin-care-description {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 1.5rem;
-        }
-
-        .skin-care-price {
-            font-weight: 600;
-            color: var(--secondary-color);
-            margin-bottom: 1rem;
-        }
-
-        .book-btn {
-            display: inline-block;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            text-decoration: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
-            transition: var(--transition);
-        }
-
-        .book-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(164, 69, 164, 0.4);
-        }
-
-        @media (max-width: 768px) {
-            .skin-care-container {
-                padding-top: 2rem;
-            }
-
-            .skin-care-header h1 {
-                font-size: 2rem;
-            }
-
-            .skin-care-grid {
-                gap: 1rem;
-            }
-        }
-    </style>
 </head>
 <body>
+    <!-- La navbar sera automatiquement insérée ici par navbar.js -->
     <div class="soins-container">
         <div class="soins-header">
             <h1>Soins pour la peau</h1>
             <p>Découvrez nos soins personnalisés pour une peau éclatante</p>
         </div>
 
-        <div class="soins-grid">
-            <div class="soins-card">
-                <img src="peau1.jpg" alt="Soin du visage" class="soins-image">
-                <div class="soins-content">
-                    <h2 class="soins-title">Soin du visage</h2>
-                    <p class="soins-description">Un soin complet pour nettoyer, hydrater et rajeunir votre peau.</p>
-                    <div class="soins-price">À partir de 50€</div>
-                    <a href="rdv.html" class="book-btn">Prendre RDV</a>
-                </div>
-            </div>
-
-            <div class="soins-card">
-                <img src="peau2.jpg" alt="Lifting" class="soins-image">
-                <div class="soins-content">
-                    <h2 class="soins-title">Lifting</h2>
-                    <p class="soins-description">Traitement non chirurgical pour un effet lifting immédiat.</p>
-                    <div class="soins-price">À partir de 80€</div>
-                    <a href="rdv.html" class="book-btn">Prendre RDV</a>
-                </div>
-            </div>
-
-            <div class="soins-card">
-                <img src="peau3.jpg" alt="Peeling" class="soins-image">
-                <div class="soins-content">
-                    <h2 class="soins-title">Peeling</h2>
-                    <p class="soins-description">Exfoliation douce pour une peau plus lisse et plus lumineuse.</p>
-                    <div class="soins-price">À partir de 60€</div>
-                    <a href="rdv.html" class="book-btn">Prendre RDV</a>
-                </div>
-            </div>
+        <div class="soins-grid" id="soinsGrid">
+            <!-- Le contenu sera chargé dynamiquement depuis l'API -->
         </div>
     </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Charger les soins de la peau
+        async function loadSoinsPeau() {
+            try {
+                const response = await fetch('/api/soins/type/peau');
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la récupération des soins');
+                }
+                const soins = await response.json();
+                const grid = document.getElementById('soinsGrid');
+                
+                if (soins.length === 0) {
+                    grid.innerHTML = '<p class="no-soins">Aucun soin disponible pour le moment.</p>';
+                    return;
+                }
+
+                grid.innerHTML = soins.map(soin => `
+                    <div class="soins-card">
+                        <img src="${soin.image}" alt="${soin.titre}" class="soins-image">
+                        <div class="soins-content">
+                            <h2 class="soins-title">${soin.titre}</h2>
+                            <p class="soins-description">${soin.description}</p>
+                            <div class="soins-price">À partir de ${soin.prix}€</div>
+                            <a href="rendez-vous.html" class="book-btn">Prendre RDV</a>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erreur lors du chargement des soins:', error);
+                const grid = document.getElementById('soinsGrid');
+                grid.innerHTML = '<p class="error-message">Une erreur est survenue lors du chargement des soins.</p>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadSoinsPeau);
+    </script>
 </body>
 </html> 

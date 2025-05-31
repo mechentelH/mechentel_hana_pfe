@@ -6,6 +6,7 @@
     <title>Témoignages - Dr Kemmouche</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
     <script src="js/navbar.js"></script>
     <style>
         :root {
@@ -70,6 +71,20 @@
             text-align: center;
             transition: var(--transition);
             border: 1px solid rgba(164, 69, 164, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testimonial-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .testimonial-card:hover {
@@ -77,35 +92,60 @@
             box-shadow: var(--shadow);
         }
 
+        .testimonial-card:hover::before {
+            opacity: 1;
+        }
+
         .testimonial-avatar {
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             margin: 0 auto 1.5rem;
             border: 3px solid var(--secondary-color);
             padding: 3px;
+            background: var(--glass-bg);
+            box-shadow: 0 4px 15px rgba(164, 69, 164, 0.3);
+            transition: var(--transition);
         }
 
-        .testimonial-avatar img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .testimonial-content {
-            margin-bottom: 1.5rem;
+        .testimonial-card:hover .testimonial-avatar {
+            transform: scale(1.1);
+            border-color: var(--primary-color);
         }
 
         .testimonial-text {
             font-style: italic;
             color: rgba(255, 255, 255, 0.9);
             margin-bottom: 1rem;
+            line-height: 1.6;
+            position: relative;
+            padding: 0 1rem;
+        }
+
+        .testimonial-text::before,
+        .testimonial-text::after {
+            content: '"';
+            color: var(--secondary-color);
+            font-size: 2rem;
+            position: absolute;
+            opacity: 0.5;
+        }
+
+        .testimonial-text::before {
+            left: -0.5rem;
+            top: -0.5rem;
+        }
+
+        .testimonial-text::after {
+            right: -0.5rem;
+            bottom: -0.5rem;
         }
 
         .testimonial-author {
             font-weight: 600;
             color: var(--secondary-color);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
         }
 
         .testimonial-date {
@@ -115,9 +155,202 @@
 
         .rating {
             color: var(--secondary-color);
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
         }
 
+        .testimonial-replies {
+            margin-top: 1.5rem;
+            padding-left: 1.5rem;
+            border-left: 2px solid var(--secondary-color);
+        }
+
+        .testimonial-card.reply {
+            background: rgba(164, 69, 164, 0.1);
+            margin-top: 1rem;
+            padding: 1.5rem;
+        }
+
+        .reply-btn {
+            background: transparent;
+            color: var(--secondary-color);
+            border: 1px solid var(--secondary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .reply-btn:hover {
+            background: var(--secondary-color);
+            color: var(--text-color);
+            transform: translateY(-2px);
+        }
+
+        .reply-form {
+            margin-top: 1rem;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reply-form.active {
+            display: block;
+        }
+
+        .reply-input {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(164, 69, 164, 0.2);
+            color: var(--text-color);
+            margin-bottom: 0.8rem;
+            resize: vertical;
+            min-height: 80px;
+            transition: var(--transition);
+        }
+
+        .reply-input:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(243, 108, 156, 0.2);
+        }
+
+        .testimonial-form {
+            background: var(--glass-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            border: 1px solid rgba(164, 69, 164, 0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-form.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Bouton flottant pour ajouter un témoignage */
+        .add-testimonial-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary-color);
+            color: var(--text-color);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            z-index: 100;
+            border: none;
+        }
+
+        .add-testimonial-btn:hover {
+            transform: scale(1.1);
+            background: var(--secondary-color);
+        }
+
+        /* Styles pour le formulaire de témoignage */
+        .testimonial-form h2 {
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .form-group textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(164, 69, 164, 0.2);
+            color: var(--text-color);
+            resize: vertical;
+        }
+
+        .rating-input {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            cursor: pointer;
+        }
+
+        .rating-input i {
+            transition: var(--transition);
+        }
+
+        .rating-input i:hover,
+        .rating-input i.active {
+            color: var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        .submit-btn {
+            background: var(--primary-color);
+            color: var(--text-color);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+
+        .submit-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Animation pour le chargement des témoignages */
+        .testimonials-grid {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive design amélioré */
         @media (max-width: 768px) {
             body {
                 padding: 1rem;
@@ -132,73 +365,405 @@
             }
 
             .testimonials-grid {
-                gap: 1rem;
+                gap: 1.5rem;
+            }
+
+            .add-testimonial-btn {
+                bottom: 1rem;
+                right: 1rem;
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            .testimonial-form {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
+
+        /* Styles supplémentaires pour les messages d'erreur et d'absence de témoignages */
+        .no-testimonials,
+        .error-message {
+            text-align: center;
+            padding: 2rem;
+            background: var(--glass-bg);
+            border-radius: 20px;
+            margin: 2rem auto;
+            max-width: 600px;
+            color: var(--text-color);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            background: var(--glass-bg);
+            color: var(--text-color);
+            box-shadow: var(--shadow);
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            max-width: 400px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex: 1;
+        }
+
+        .notification.success {
+            border-left: 4px solid #4CAF50;
+        }
+
+        .notification.error {
+            border-left: 4px solid #f44336;
+        }
+
+        .notification i {
+            font-size: 1.2rem;
+        }
+
+        .notification.success i {
+            color: #4CAF50;
+        }
+
+        .notification.error i {
+            color: #f44336;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-left: 1rem;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .notification-close:hover {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .notification {
+                left: 20px;
+                right: 20px;
+                transform: translateY(-120%);
+                max-width: none;
+            }
+
+            .notification.show {
+                transform: translateY(0);
             }
         }
     </style>
 </head>
 <body>
+    <!-- La navbar sera automatiquement insérée ici par navbar.js -->
     <div class="testimonials-container">
         <div class="testimonials-header">
             <h1>Témoignages</h1>
             <p>Découvrez ce que nos patients disent de nous</p>
         </div>
 
-        <div class="testimonials-grid">
-            <div class="testimonial-card">
-                <div class="testimonial-avatar">
-                    <img src="avatar1.jpg" alt="Patient 1">
-                </div>
-                <div class="testimonial-content">
-                    <div class="rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <p class="testimonial-text">"Une expérience exceptionnelle ! Le Dr Kemmouche est très professionnelle et à l'écoute. Les résultats sont au rendez-vous."</p>
-                    <div class="testimonial-author">Sarah M.</div>
-                    <div class="testimonial-date">12 Mars 2024</div>
-                </div>
-            </div>
-
-            <div class="testimonial-card">
-                <div class="testimonial-avatar">
-                    <img src="avatar2.jpg" alt="Patient 2">
-                </div>
-                <div class="testimonial-content">
-                    <div class="rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <p class="testimonial-text">"Je suis ravie des soins reçus. L'ambiance est agréable et le personnel est très attentionné."</p>
-                    <div class="testimonial-author">Marie L.</div>
-                    <div class="testimonial-date">8 Mars 2024</div>
-                </div>
-            </div>
-
-            <div class="testimonial-card">
-                <div class="testimonial-avatar">
-                    <img src="avatar3.jpg" alt="Patient 3">
-                </div>
-                <div class="testimonial-content">
-                    <div class="rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                    </div>
-                    <p class="testimonial-text">"Des conseils précieux et des soins adaptés à mes besoins. Je recommande vivement !"</p>
-                    <div class="testimonial-author">Sophie D.</div>
-                    <div class="testimonial-date">5 Mars 2024</div>
-                </div>
-            </div>
+        <div class="testimonials-grid" id="testimonialsGrid">
+            <!-- Les témoignages seront chargés dynamiquement ici -->
         </div>
-    </div>
+
+        <!-- Formulaire d'ajout de témoignage (visible uniquement pour les utilisateurs connectés) -->
+        <div id="addTestimonialForm" class="testimonial-form">
+            <h2>Ajouter un témoignage</h2>
+            <form id="newTestimonialForm">
+                <div class="form-group">
+                    <label for="testimonialContent">Votre témoignage</label>
+                    <textarea id="testimonialContent" required placeholder="Partagez votre expérience..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="testimonialRating">Note sur 5</label>
+                    <input type="number" id="testimonialRating" min="1" max="5" value="5" required>
+                </div>
+                <button type="submit" class="submit-btn">Publier mon témoignage</button>
+            </form>
+                </div>
+            </div>
+
+    <!-- Bouton flottant pour ajouter un témoignage -->
+    <button class="add-testimonial-btn" id="addTestimonialBtn" style="display: none;">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <script>
+        // Fonction pour charger les témoignages depuis l'API
+        async function loadTestimonials() {
+            try {
+                const token = localStorage.getItem('token');
+                const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+                
+                const response = await fetch('http://localhost:5000/api/temoignages', { headers });
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la récupération des témoignages');
+                }
+                const temoignages = await response.json();
+                
+                const grid = document.getElementById('testimonialsGrid');
+                
+                if (temoignages.length === 0) {
+                    grid.innerHTML = '<p class="no-testimonials">Aucun témoignage disponible pour le moment.</p>';
+                    return;
+                }
+
+                grid.innerHTML = temoignages.map(temoignage => `
+            <div class="testimonial-card">
+                <div class="testimonial-avatar">
+                            <img src="${temoignage.avatar || 'default-avatar.jpg'}" alt="${temoignage.nom}">
+                </div>
+                <div class="testimonial-content">
+                    <div class="rating">
+                                Note: ${temoignage.note}/5
+                            </div>
+                            <p class="testimonial-text">"${temoignage.contenu}"</p>
+                            <div class="testimonial-author">${temoignage.nom}</div>
+                            <div class="testimonial-date">${formatDate(temoignage.date)}</div>
+                            
+                            ${token ? `
+                                <button class="reply-btn" onclick="toggleReplyForm('${temoignage._id}')">
+                                    <i class="fas fa-reply"></i> Répondre
+                                </button>
+                                <div class="reply-form" id="replyForm-${temoignage._id}">
+                                    <textarea class="reply-input" placeholder="Votre réponse..."></textarea>
+                                    <button class="submit-btn" onclick="submitReply('${temoignage._id}')">Envoyer</button>
+                    </div>
+                            ` : ''}
+                            
+                            ${temoignage.reponses ? `
+                                <div class="testimonial-replies">
+                                    ${temoignage.reponses.map(reponse => `
+                                        <div class="testimonial-card reply">
+                                            <div class="testimonial-content">
+                                                <p class="testimonial-text">"${reponse.contenu}"</p>
+                                                <div class="testimonial-author">${reponse.nom}</div>
+                                                <div class="testimonial-date">${formatDate(reponse.date)}</div>
+                </div>
+            </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                </div>
+                    </div>
+                `).join('');
+
+                // Afficher le formulaire d'ajout si l'utilisateur est connecté
+                const addTestimonialForm = document.getElementById('addTestimonialForm');
+                if (token) {
+                    addTestimonialForm.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                const grid = document.getElementById('testimonialsGrid');
+                grid.innerHTML = '<p class="error-message">Une erreur est survenue lors du chargement des témoignages.</p>';
+            }
+        }
+
+        // Fonction pour formater la date
+        function formatDate(dateString) {
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            return new Date(dateString).toLocaleDateString('fr-FR', options);
+        }
+
+        // Soumission du nouveau témoignage
+        document.getElementById('newTestimonialForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                const contenu = document.getElementById('testimonialContent').value.trim();
+                const note = parseInt(document.getElementById('testimonialRating').value);
+
+                // Validation des données
+                if (!contenu) {
+                    throw new Error('Le contenu du témoignage ne peut pas être vide');
+                }
+                if (note < 1 || note > 5) {
+                    throw new Error('La note doit être comprise entre 1 et 5');
+                }
+
+                const temoignageData = {
+                    contenu: contenu,
+                    note: note
+                };
+
+                const response = await fetch('http://localhost:5000/api/temoignages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(temoignageData)
+                });
+
+                let errorMessage = 'Une erreur est survenue lors de l\'ajout du témoignage';
+                
+                try {
+                    const data = await response.json();
+                    if (!response.ok) {
+                        errorMessage = data.message || data.error || errorMessage;
+                        console.error('Détails de l\'erreur:', data);
+                    }
+                } catch (jsonError) {
+                    console.error('Erreur lors de la lecture de la réponse:', jsonError);
+                    errorMessage = 'Erreur de communication avec le serveur';
+                }
+
+                if (response.ok) {
+                    // Réinitialiser le formulaire
+                    document.getElementById('newTestimonialForm').reset();
+                    // Fermer le formulaire
+                    toggleTestimonialForm();
+                    // Recharger les témoignages
+                    loadTestimonials();
+                    // Afficher un message de succès
+                    showNotification('Témoignage ajouté avec succès !', 'success');
+                } else {
+                    throw new Error(errorMessage);
+                }
+            } catch (error) {
+                console.error('Erreur détaillée:', error);
+                showNotification(error.message || 'Une erreur est survenue lors de l\'ajout du témoignage', 'error');
+            }
+        });
+
+        // Fonction pour afficher les notifications avec plus de détails
+        function showNotification(message, type = 'error') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            // Ajouter un bouton de fermeture pour les erreurs
+            const closeButton = type === 'error' ? 
+                '<button class="notification-close"><i class="fas fa-times"></i></button>' : '';
+            
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+                ${closeButton}
+            `;
+            
+            document.body.appendChild(notification);
+
+            // Animation d'apparition
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            // Gestion du bouton de fermeture
+            const closeBtn = notification.querySelector('.notification-close');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                });
+            }
+
+            // Supprimer la notification après 5 secondes (uniquement pour les succès)
+            if (type === 'success') {
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }, 5000);
+            }
+        }
+
+        // Fonction pour afficher/masquer le formulaire de réponse
+        function toggleReplyForm(temoignageId) {
+            const replyForm = document.getElementById(`replyForm-${temoignageId}`);
+            replyForm.classList.toggle('active');
+        }
+
+        // Fonction pour soumettre une réponse
+        async function submitReply(temoignageId) {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                const replyContent = document.querySelector(`#replyForm-${temoignageId} .reply-input`).value;
+                if (!replyContent.trim()) {
+                    alert('Veuillez entrer une réponse');
+                    return;
+                }
+
+                const response = await fetch(`http://localhost:5000/api/temoignages/${temoignageId}/reponses`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ contenu: replyContent })
+                });
+
+                if (response.ok) {
+                    document.querySelector(`#replyForm-${temoignageId} .reply-input`).value = '';
+                    toggleReplyForm(temoignageId);
+                    loadTestimonials();
+                } else {
+                    throw new Error('Erreur lors de l\'ajout de la réponse');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de l\'ajout de la réponse');
+            }
+        }
+
+        // Fonction pour afficher/masquer le formulaire de témoignage
+        function toggleTestimonialForm() {
+            const form = document.getElementById('addTestimonialForm');
+            form.classList.toggle('show');
+        }
+
+        // Gestion du bouton flottant
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            const addTestimonialBtn = document.getElementById('addTestimonialBtn');
+            
+            if (token) {
+                addTestimonialBtn.style.display = 'flex';
+                addTestimonialBtn.addEventListener('click', toggleTestimonialForm);
+            }
+
+            loadTestimonials();
+        });
+    </script>
 </body>
 </html> 

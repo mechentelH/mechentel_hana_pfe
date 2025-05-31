@@ -1,40 +1,119 @@
-// Création de la barre de navigation
+// Fonction pour créer la barre de navigation
 function createNavbar() {
     const navbar = document.createElement('nav');
     navbar.className = 'navbar';
-    navbar.innerHTML = `
-        <div class="logo">
-            <a href="index.html">
-                <img src="logo.png" alt="Dr Kemmouche Logo">
-            </a>
-        </div>
-        <div class="nav-links">
-            <a href="index.html">Accueil</a>
-            <a href="index.html#about">À propos</a>
-            <a href="index.html#cabinet">Cabinet</a>
-            <div class="dropdown">
-                <a href="#" class="dropdown-trigger">Soins</a>
-                <div class="dropdown-content">
-                    <a href="soins-peau.html">Soins pour la peau</a>
-                    <a href="soins-cheveux.html">Soins pour les cheveux</a>
-                </div>
-            </div>
-            <a href="articles.html">Articles</a>
-            <a href="temoignages.html">Témoignages</a>
-            <a href="rdv.html">Rendez-vous</a>
-            <a href="login.html">Connexion</a>
-        </div>
-        <button class="mobile-menu-btn">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-    `;
 
-    // Ajout de la barre de navigation au début du body
+    // Récupérer le token et les informations utilisateur
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+    // Logo et lien vers l'accueil
+    const logo = document.createElement('div');
+    logo.className = 'logo';
+    logo.innerHTML = '<a href="index.html"><img src="logo.png" alt="Dr Kemmouche"></a>';
+    navbar.appendChild(logo);
+
+    // Liens de navigation
+    const navLinks = document.createElement('div');
+    navLinks.className = 'nav-links';
+
+    // Liens communs
+    const commonLinks = [
+        { href: 'index.html', text: 'Accueil' },
+        { href: 'soins-peau.html', text: 'Soins Peau' },
+        { href: 'soins-cheveux.html', text: 'Soins Cheveux' },
+        { href: 'temoignages.html', text: 'Témoignages' }
+    ];
+
+    // Ajouter les liens communs
+    commonLinks.forEach(link => {
+        const a = document.createElement('a');
+        a.href = link.href;
+        a.textContent = link.text;
+        if (window.location.pathname.includes(link.href)) {
+            a.classList.add('active');
+        }
+        navLinks.appendChild(a);
+    });
+
+    // Menu déroulant pour les soins
+    const soinsDropdown = document.createElement('div');
+    soinsDropdown.className = 'dropdown';
+    soinsDropdown.innerHTML = `
+        <a href="#">Soins <i class="fas fa-chevron-down"></i></a>
+        <div class="dropdown-content">
+            <a href="soins-peau.html">Soins de la peau</a>
+            <a href="soins-cheveux.html">Soins des cheveux</a>
+        </div>
+    `;
+    navLinks.appendChild(soinsDropdown);
+
+    // Liens spécifiques selon le rôle de l'utilisateur
+    if (token) {
+        if (user.role === 'admin') {
+            const adminLinks = [
+                { href: 'dashboard-med.html', text: 'Tableau de bord' },
+                { href: 'listesPatients.html', text: 'Patients' }
+            ];
+            adminLinks.forEach(link => {
+                const a = document.createElement('a');
+                a.href = link.href;
+                a.textContent = link.text;
+                if (window.location.pathname.includes(link.href)) {
+                    a.classList.add('active');
+                }
+                navLinks.appendChild(a);
+            });
+        } else if (user.role === 'patient') {
+            const patientLinks = [
+                { href: 'patient-dashboard.html', text: 'Mon espace' },
+                { href: 'rendez-vous.html', text: 'Rendez-vous' }
+            ];
+            patientLinks.forEach(link => {
+                const a = document.createElement('a');
+                a.href = link.href;
+                a.textContent = link.text;
+                if (window.location.pathname.includes(link.href)) {
+                    a.classList.add('active');
+                }
+                navLinks.appendChild(a);
+            });
+        }
+
+        // Bouton de déconnexion
+        const logoutBtn = document.createElement('a');
+        logoutBtn.href = '#';
+        logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Déconnexion';
+        logoutBtn.onclick = (e) => {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        };
+        navLinks.appendChild(logoutBtn);
+    } else {
+        // Liens pour les utilisateurs non connectés
+        const authLinks = [
+            { href: 'login.html', text: 'Connexion' },
+            { href: 'inscription.html', text: 'Inscription' }
+        ];
+        authLinks.forEach(link => {
+            const a = document.createElement('a');
+            a.href = link.href;
+            a.textContent = link.text;
+            if (window.location.pathname.includes(link.href)) {
+                a.classList.add('active');
+            }
+            navLinks.appendChild(a);
+        });
+    }
+
+    navbar.appendChild(navLinks);
+
+    // Ajouter la barre de navigation au début du body
     document.body.insertBefore(navbar, document.body.firstChild);
 
-    // Ajout des styles CSS pour la barre de navigation
+    // Ajouter le style CSS pour la barre de navigation
     const style = document.createElement('style');
     style.textContent = `
         .navbar {
@@ -50,17 +129,11 @@ function createNavbar() {
             align-items: center;
             z-index: 1000;
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-            animation: slideDown 0.5s ease-out;
         }
 
         .logo img {
             height: 50px;
             transition: var(--transition);
-            filter: drop-shadow(0 0 10px rgba(164, 69, 164, 0.5));
-        }
-
-        .logo img:hover {
-            transform: scale(1.05) rotate(-2deg);
         }
 
         .nav-links {
@@ -76,9 +149,6 @@ function createNavbar() {
             position: relative;
             padding: 0.5rem 0;
             transition: var(--transition);
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
         }
 
         .nav-links a::after {
@@ -97,11 +167,6 @@ function createNavbar() {
             width: 100%;
         }
 
-        .nav-links a:hover {
-            color: var(--secondary-color);
-            transform: translateY(-2px);
-        }
-
         .dropdown {
             position: relative;
         }
@@ -112,65 +177,24 @@ function createNavbar() {
             left: 0;
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
-            min-width: 220px;
-            border-radius: 12px;
-            padding: 0.8rem 0;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(10px);
-            transition: var(--transition);
+            min-width: 200px;
+            border-radius: 8px;
+            padding: 0.5rem 0;
+            display: none;
             box-shadow: var(--shadow);
-            border: 1px solid rgba(164, 69, 164, 0.2);
         }
 
         .dropdown:hover .dropdown-content {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
+            display: block;
         }
 
         .dropdown-content a {
             display: block;
-            padding: 0.8rem 1.5rem;
-            font-size: 0.9rem;
-            transition: var(--transition);
+            padding: 0.5rem 1rem;
         }
 
         .dropdown-content a:hover {
             background: rgba(164, 69, 164, 0.1);
-            padding-left: 2rem;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 30px;
-            height: 21px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            z-index: 1001;
-        }
-
-        .mobile-menu-btn span {
-            width: 100%;
-            height: 3px;
-            background: var(--text-color);
-            border-radius: 3px;
-            transition: var(--transition);
-        }
-
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
         }
 
         @media (max-width: 768px) {
@@ -178,115 +202,13 @@ function createNavbar() {
                 padding: 1rem;
             }
 
-            .mobile-menu-btn {
-                display: flex;
-            }
-
             .nav-links {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 80%;
-                max-width: 300px;
-                height: 100vh;
-                background: var(--glass-bg);
-                backdrop-filter: blur(10px);
-                flex-direction: column;
-                padding: 6rem 2rem 2rem;
-                transition: var(--transition);
-                box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
-            }
-
-            .nav-links.active {
-                right: 0;
-            }
-
-            .nav-links a {
-                width: 100%;
-                text-align: left;
-                padding: 1rem 0;
-            }
-
-            .dropdown-content {
-                position: static;
-                opacity: 1;
-                visibility: visible;
-                transform: none;
-                background: transparent;
-                box-shadow: none;
-                border: none;
-                padding-left: 1rem;
                 display: none;
-            }
-
-            .dropdown.active .dropdown-content {
-                display: block;
-            }
-
-            .mobile-menu-btn.active span:nth-child(1) {
-                transform: translateY(9px) rotate(45deg);
-            }
-
-            .mobile-menu-btn.active span:nth-child(2) {
-                opacity: 0;
-            }
-
-            .mobile-menu-btn.active span:nth-child(3) {
-                transform: translateY(-9px) rotate(-45deg);
             }
         }
     `;
-
     document.head.appendChild(style);
-
-    // Ajout de la classe active à la page courante
-    const currentPage = window.location.pathname.split('/').pop();
-    const navLinks = document.querySelectorAll('.nav-links a');
-    navLinks.forEach(link => {
-        if (link.getAttribute('href') === currentPage) {
-            link.classList.add('active');
-        }
-    });
-
-    // Gestion du menu mobile
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const navLinksContainer = document.querySelector('.nav-links');
-    const dropdowns = document.querySelectorAll('.dropdown');
-
-    mobileMenuBtn.addEventListener('click', () => {
-        mobileMenuBtn.classList.toggle('active');
-        navLinksContainer.classList.toggle('active');
-    });
-
-    dropdowns.forEach(dropdown => {
-        const trigger = dropdown.querySelector('.dropdown-trigger');
-        trigger.addEventListener('click', (e) => {
-            if (window.innerWidth <= 768) {
-                e.preventDefault();
-                dropdown.classList.toggle('active');
-            }
-        });
-    });
-
-    // Fermer le menu mobile lors du clic sur un lien
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            if (window.innerWidth <= 768) {
-                mobileMenuBtn.classList.remove('active');
-                navLinksContainer.classList.remove('active');
-            }
-        });
-    });
-
-    // Fermer le menu mobile lors du redimensionnement de la fenêtre
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > 768) {
-            mobileMenuBtn.classList.remove('active');
-            navLinksContainer.classList.remove('active');
-            dropdowns.forEach(dropdown => dropdown.classList.remove('active'));
-        }
-    });
 }
 
-// Appel de la fonction au chargement de la page
+// Appeler la fonction au chargement du DOM
 document.addEventListener('DOMContentLoaded', createNavbar); 

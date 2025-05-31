@@ -1,0 +1,269 @@
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="logo">
+        <a href="index.html">
+            <img src="logo.png" alt="Dr Kemmouche Logo">
+        </a>
+    </div>
+    <div class="nav-links">
+        <a href="index.html">Accueil</a>
+        <div class="dropdown">
+            <a href="#" class="dropdown-trigger">Soins</a>
+            <div class="dropdown-content">
+                <a href="soins-peau.html">Soins pour la peau</a>
+                <a href="soins-cheveux.html">Soins pour les cheveux</a>
+            </div>
+        </div>
+        <a href="articles1.html">Articles</a>
+        <a href="temoignages.html">Témoignages</a>
+        <a href="rdv.html" id="rdvLink">Rendez-vous</a>
+        <!-- État de connexion -->
+        <div id="authSection">
+            <!-- Sera rempli dynamiquement par JavaScript -->
+        </div>
+    </div>
+</nav>
+
+<style>
+    /* Navbar Styles */
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo img {
+        height: 50px;
+        transition: var(--transition);
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .nav-links a {
+        color: var(--text-color);
+        text-decoration: none;
+        font-weight: 500;
+        transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+        color: var(--secondary-color);
+    }
+
+    /* User Menu Styles */
+    .user-menu {
+        position: relative;
+        display: inline-block;
+    }
+
+    .user-menu-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: transparent;
+        border: none;
+        color: var(--text-color);
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .user-menu-btn:hover {
+        color: var(--secondary-color);
+    }
+
+    .user-menu-content {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        min-width: 200px;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        z-index: 1000;
+        border: 1px solid rgba(164, 69, 164, 0.2);
+        padding: 0.5rem 0;
+    }
+
+    .user-menu-content.show {
+        display: block;
+        animation: fadeInUp 0.3s ease-out;
+    }
+
+    .user-menu-content a {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.8rem 1.5rem;
+        color: var(--text-color);
+        text-decoration: none;
+        transition: var(--transition);
+    }
+
+    .user-menu-content a:hover {
+        background: rgba(164, 69, 164, 0.1);
+        color: var(--secondary-color);
+    }
+
+    /* Dropdown Styles */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        min-width: 200px;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        z-index: 1000;
+        border: 1px solid rgba(164, 69, 164, 0.2);
+        padding: 0.5rem 0;
+    }
+
+    .dropdown-content a {
+        display: block;
+        padding: 0.8rem 1.5rem;
+        color: var(--text-color);
+        text-decoration: none;
+        transition: var(--transition);
+        font-size: 0.9rem;
+    }
+
+    .dropdown-content a:hover {
+        background: rgba(164, 69, 164, 0.1);
+        color: var(--secondary-color);
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+        animation: fadeInUp 0.3s ease-out;
+    }
+
+    .dropdown-trigger {
+        cursor: pointer;
+    }
+
+    .dropdown-trigger::after {
+        content: '\f107';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        margin-left: 0.5rem;
+        transition: var(--transition);
+    }
+
+    .dropdown:hover .dropdown-trigger::after {
+        transform: rotate(180deg);
+    }
+
+    @media (max-width: 768px) {
+        .navbar {
+            padding: 1rem;
+        }
+
+        .nav-links {
+            display: none;
+        }
+    }
+</style>
+
+<script>
+    // Fonction pour mettre à jour la barre de navigation en fonction de l'état de connexion
+    function updateNavbar() {
+        const authSection = document.getElementById('authSection');
+        const rdvLink = document.getElementById('rdvLink');
+        const user = JSON.parse(localStorage.getItem('user'));
+        const token = localStorage.getItem('token');
+
+        // Mettre à jour le lien de rendez-vous - toujours accessible si connecté
+        if (user && token) {
+            rdvLink.href = 'rendez-vous.html';
+            rdvLink.style.display = 'block';
+            rdvLink.style.opacity = '1';
+            rdvLink.style.pointerEvents = 'auto';
+            rdvLink.style.cursor = 'pointer';
+            rdvLink.removeAttribute('onclick');
+        } else {
+            rdvLink.href = 'login.html';
+            rdvLink.style.display = 'block';
+            rdvLink.style.opacity = '1';
+            rdvLink.style.pointerEvents = 'auto';
+            rdvLink.style.cursor = 'pointer';
+        }
+
+        if (user && token) {
+            // Utilisateur connecté
+            authSection.innerHTML = `
+                <div class="user-menu">
+                    <button class="user-menu-btn">
+                        <i class="fas fa-user-circle"></i>
+                        ${user.nom}
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="user-menu-content">
+                        <a href="dashboard-patient.html">
+                            <i class="fas fa-user"></i>
+                            Mon espace
+                        </a>
+                        <a href="#" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Déconnexion
+                        </a>
+                    </div>
+                </div>
+            `;
+
+            // Ajouter l'événement pour le menu déroulant
+            const userMenuBtn = document.querySelector('.user-menu-btn');
+            const userMenuContent = document.querySelector('.user-menu-content');
+
+            userMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                userMenuContent.classList.toggle('show');
+            });
+
+            // Fermer le menu en cliquant ailleurs
+            document.addEventListener('click', () => {
+                userMenuContent.classList.remove('show');
+            });
+        } else {
+            // Utilisateur non connecté
+            authSection.innerHTML = `
+                <a href="login.html" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Connexion
+                </a>
+            `;
+        }
+    }
+
+    // Fonction de déconnexion
+    function logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = 'index.html';
+    }
+
+    // Mettre à jour la barre de navigation au chargement de la page
+    document.addEventListener('DOMContentLoaded', updateNavbar);
+</script> 

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dossier médical - Dr Kemmouche</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #a445a4;
+            --secondary-color: #f36c9c;
+            --bg-gradient: linear-gradient(135deg, #232336 0%, #a445a4 100%);
+            --text-color: #f3f3f3;
+            --shadow: 0 4px 32px rgba(164, 69, 164, 0.67);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --glass-bg: rgba(35, 35, 54, 0.95);
+            --card-bg: rgba(24, 24, 36, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid rgba(164, 69, 164, 0.2);
+            border-radius: 8px;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: rgba(164, 69, 164, 0.2);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Grille des informations médicales */
+        .medical-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .medical-card {
+            background: var(--glass-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(164, 69, 164, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-content {
+            line-height: 1.6;
+        }
+
+        /* Formulaire d'édition */
+        .edit-form {
+            background: var(--glass-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(164, 69, 164, 0.2);
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--card-bg);
+            border: 1px solid rgba(164, 69, 164, 0.2);
+            border-radius: 8px;
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Historique médical */
+        .medical-history {
+            background: var(--glass-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(164, 69, 164, 0.2);
+        }
+
+        .history-list {
+            list-style: none;
+        }
+
+        .history-item {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(164, 69, 164, 0.2);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-date {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .history-content {
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .medical-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Dossier médical</h1>
+            <button class="btn btn-primary" onclick="toggleEditForm()">
+                <i class="fas fa-edit"></i>
+                Modifier le dossier
+            </button>
+        </div>
+
+        <!-- Grille des informations médicales -->
+        <div class="medical-grid">
+            <div class="medical-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-allergies"></i>
+                        Allergies
+                    </h3>
+                </div>
+                <div class="card-content" id="allergies">
+                    Chargement...
+                </div>
+            </div>
+
+            <div class="medical-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-pills"></i>
+                        Médications
+                    </h3>
+                </div>
+                <div class="card-content" id="medications">
+                    Chargement...
+                </div>
+            </div>
+
+            <div class="medical-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-heartbeat"></i>
+                        Antécédents familiaux
+                    </h3>
+                </div>
+                <div class="card-content" id="antecedentsFamiliaux">
+                    Chargement...
+                </div>
+            </div>
+
+            <div class="medical-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-notes-medical"></i>
+                        Antécédents personnels
+                    </h3>
+                </div>
+                <div class="card-content" id="antecedentsPersonnels">
+                    Chargement...
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulaire d'édition -->
+        <div class="edit-form" id="editForm">
+            <form id="medicalForm">
+                <div class="form-group">
+                    <label for="allergies">Allergies</label>
+                    <textarea id="allergies" name="allergies" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="medications">Médications en cours</label>
+                    <textarea id="medications" name="medications" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="antecedentsFamiliaux">Antécédents familiaux</label>
+                    <textarea id="antecedentsFamiliaux" name="antecedentsFamiliaux" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="antecedentsPersonnels">Antécédents personnels</label>
+                    <textarea id="antecedentsPersonnels" name="antecedentsPersonnels" class="form-control" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+            </form>
+        </div>
+
+        <!-- Historique médical -->
+        <div class="medical-history">
+            <h2 class="card-title" style="margin-bottom: 1rem;">
+                <i class="fas fa-history"></i>
+                Historique médical
+            </h2>
+            <ul class="history-list" id="historyList">
+                <!-- L'historique sera ajouté dynamiquement ici -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Vérifier l'authentification
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+
+        const user = JSON.parse(localStorage.getItem('user'));
+        const isDoctor = user.role === 'medecin';
+
+        // Afficher/masquer le formulaire d'édition
+        function toggleEditForm() {
+            const form = document.getElementById('editForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Charger les informations médicales
+        async function loadMedicalInfo() {
+            try {
+                const response = await fetch(`http://localhost:5000/api/users/${user._id}/medical`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+
+                // Mettre à jour les cartes
+                document.getElementById('allergies').textContent = data.allergies || 'Aucune allergie connue';
+                document.getElementById('medications').textContent = data.medications || 'Aucune médication en cours';
+                document.getElementById('antecedentsFamiliaux').textContent = data.antecedentsFamiliaux || 'Aucun antécédent familial notable';
+                document.getElementById('antecedentsPersonnels').textContent = data.antecedentsPersonnels || 'Aucun antécédent personnel notable';
+
+                // Remplir le formulaire
+                document.getElementById('allergies').value = data.allergies || '';
+                document.getElementById('medications').value = data.medications || '';
+                document.getElementById('antecedentsFamiliaux').value = data.antecedentsFamiliaux || '';
+                document.getElementById('antecedentsPersonnels').value = data.antecedentsPersonnels || '';
+
+                // Charger l'historique
+                loadMedicalHistory();
+            } catch (error) {
+                console.error('Erreur lors du chargement des informations médicales:', error);
+            }
+        }
+
+        // Charger l'historique médical
+        async function loadMedicalHistory() {
+            try {
+                const response = await fetch(`http://localhost:5000/api/users/${user._id}/history`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const history = await response.json();
+
+                const historyList = document.getElementById('historyList');
+                historyList.innerHTML = history.map(item => `
+                    <li class="history-item">
+                        <div class="history-date">${new Date(item.date).toLocaleDateString()}</div>
+                        <div class="history-content">${item.description}</div>
+                    </li>
+                `).join('');
+            } catch (error) {
+                console.error('Erreur lors du chargement de l\'historique:', error);
+            }
+        }
+
+        // Enregistrer les modifications
+        document.getElementById('medicalForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const formData = new FormData(e.target);
+                const response = await fetch(`http://localhost:5000/api/users/${user._id}/medical`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        allergies: formData.get('allergies'),
+                        medications: formData.get('medications'),
+                        antecedentsFamiliaux: formData.get('antecedentsFamiliaux'),
+                        antecedentsPersonnels: formData.get('antecedentsPersonnels')
+                    })
+                });
+
+                if (response.ok) {
+                    toggleEditForm();
+                    loadMedicalInfo();
+                } else {
+                    const error = await response.json();
+                    alert(error.message);
+                }
+            } catch (error) {
+                console.error('Erreur lors de la mise à jour du dossier:', error);
+                alert('Erreur lors de la mise à jour du dossier');
+            }
+        });
+
+        // Charger les informations au chargement de la page
+        document.addEventListener('DOMContentLoaded', loadMedicalInfo);
+    </script>
+</body>
+</html> 

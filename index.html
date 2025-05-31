@@ -1,12 +1,25 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dr Kemmouche - Médecine Esthétique</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="js/navbar.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/dashboard-med.css">
+    <link rel="stylesheet" href="/css/dashboard-patient.css">
+    <link rel="stylesheet" href="/css/inscription.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/rdv.css">
+    <link rel="stylesheet" href="/css/temoignages.css">
+    <link rel="stylesheet" href="/css/infos-patient.css">
+    <script src="js/navbar.js" defer></script>
     <style>
         :root {
             --primary-color: #a445a4;
@@ -382,6 +395,7 @@
                 transform: translateY(-100%);
                 opacity: 0;
             }
+
             to {
                 transform: translateY(0);
                 opacity: 1;
@@ -393,6 +407,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -403,9 +418,11 @@
             0% {
                 background-position: 0% 50%;
             }
+
             50% {
                 background-position: 100% 50%;
             }
+
             100% {
                 background-position: 0% 50%;
             }
@@ -415,6 +432,7 @@
             from {
                 background-position: 0 0;
             }
+
             to {
                 background-position: 100% 100%;
             }
@@ -476,50 +494,17 @@
             transform: translateY(0);
         }
     </style>
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/admin.css">
-    <link rel="stylesheet" href="css/dashboard-med.css">
-    <link rel="stylesheet" href="css/dashboard-patient.css">
-    <link rel="stylesheet" href="css/inscription.css">
-    <link rel="stylesheet" href="css/login.css">
-    <link rel="stylesheet" href="css/rdv.css">
-    <link rel="stylesheet" href="css/temoignages.css">
-    <link rel="stylesheet" href="css/infos-patient.css">
 </head>
-<body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="logo">
-            <a href="index.html">
-                <img src="logo.png" alt="Dr Kemmouche Logo">
-            </a>
-        </div>
-        <div class="nav-links">
-            <a href="index.html" class="active">Accueil</a>
-            <a href="index.html#about">À propos</a>
-            <a href="index.html#cabinet">Cabinet</a>
-            <div class="dropdown">
-                <a href="#" class="dropdown-trigger">Soins</a>
-                <div class="dropdown-content">
-                    <a href="soins-peau.html">Soins pour la peau</a>
-                    <a href="soins-cheveux.html">Soins pour les cheveux</a>
-                </div>
-            </div>
-            <a href="articles.html">Articles</a>
-            <a href="temoignages.html">Témoignages</a>
-            <a href="rdv.html">Rendez-vous</a>
-            <a href="login.html">Connexion</a>
-        </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section class="hero">
+<body>
+    <!-- La navbar sera automatiquement insérée ici par navbar.js -->
+    <div class="hero">
         <div class="hero-content">
             <h1>Médecine esthétique moderne à Annaba</h1>
-            <p>Des soins sur-mesure pour révéler votre beauté naturelle, dans un espace médical pensé pour votre bien-être.</p>
+            <p>Des soins sur-mesure pour révéler votre beauté naturelle, dans un espace médical pensé pour votre
+                bien-être.</p>
         </div>
-    </section>
+    </div>
 
     <!-- About Section -->
     <section class="about" id="about">
@@ -530,8 +515,10 @@
                     <img src="Docteur K.jpg" alt="Dr Kemmouche">
                 </div>
                 <div class="doctor-info">
-                    <p>Le Dr Kemmouche est une spécialiste en médecine esthétique. Elle accompagne chaque patient avec rigueur, éthique et bienveillance, en utilisant des technologies de pointe et des produits certifiés.</p>
-                    
+                    <p>Le Dr Kemmouche est une spécialiste en médecine esthétique. Elle accompagne chaque patient avec
+                        rigueur, éthique et bienveillance, en utilisant des technologies de pointe et des produits
+                        certifiés.</p>
+
                     <h3>Spécialité :</h3>
                     <ul>
                         <li>Médecine esthétique</li>
@@ -552,7 +539,8 @@
     <section class="cabinet" id="cabinet">
         <div class="container">
             <h2>Le cabinet en images</h2>
-            <p>Un espace pensé pour le confort, l'intimité et la qualité des soins. Chaque détail reflète l'engagement du Dr Kemmouche à offrir une expérience haut de gamme.</p>
+            <p>Un espace pensé pour le confort, l'intimité et la qualité des soins. Chaque détail reflète l'engagement
+                du Dr Kemmouche à offrir une expérience haut de gamme.</p>
             <div class="cabinet-images">
                 <img src="cabinet1.jpg" alt="Cabinet 1">
                 <img src="cabinet2.jpg" alt="Cabinet 2">
@@ -563,37 +551,20 @@
 
     <script src="/script.js"></script>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const token = localStorage.getItem('token');
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        const monEspaceLink = document.getElementById('monEspaceLink');
-        const loginButtonContainer = document.getElementById('loginButtonContainer');
-        const userMenuContainer = document.getElementById('userMenuContainer');
-        const userName = document.getElementById('userName');
-        const dashboardLink = document.getElementById('dashboardLink');
-        const patientDashboardLink = document.getElementById('patientDashboardLink');
-        
-        if (token) {
-            // Utilisateur connecté
-            loginButtonContainer.style.display = 'none';
-            userMenuContainer.style.display = 'block';
-            userName.textContent = user.nom || 'Mon compte';
-            
-            if (user.role === 'admin') {
-                dashboardLink.style.display = 'block';
-                patientDashboardLink.style.display = 'none';
-            } else if (user.role === 'patient') {
-                dashboardLink.style.display = 'none';
-                patientDashboardLink.style.display = 'block';
-                monEspaceLink.style.display = 'inline-block';
+        document.addEventListener('DOMContentLoaded', function () {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+            if (token) {
+                // Utilisateur connecté
+                if (user.role === 'admin') {
+                    window.location.href = '/dashboard-med.html';
+                } else if (user.role === 'patient') {
+                    window.location.href = '/dashboard-patient.html';
+                }
             }
-        } else {
-            // Utilisateur non connecté
-            loginButtonContainer.style.display = 'block';
-            userMenuContainer.style.display = 'none';
-            monEspaceLink.style.display = 'none';
-        }
-    });
+        });
     </script>
 </body>
-</html> 
+
+</html>

@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Patients - Dr Kemmouche</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #a445a4;
+            --secondary-color: #f36c9c;
+            --bg-gradient: linear-gradient(135deg, #232336 0%, #a445a4 100%);
+            --text-color: #2c3e50;
+            --shadow: 0 4px 32px rgba(164, 69, 164, 0.67);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --success-color: #4CAF50;
+            --warning-color: #FFC107;
+            --danger-color: #f44336;
+            --border-radius: 16px;
+            --spacing: 1.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--spacing);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.4rem;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .patients-list {
+            display: grid;
+            gap: 2rem;
+            padding: 1rem 0;
+        }
+
+        .patient-item {
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .patient-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .patient-info {
+            flex: 1;
+        }
+
+        .patient-name {
+            font-size: 1.6em;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(164, 69, 164, 0.1);
+        }
+
+        .patient-name i {
+            color: var(--secondary-color);
+            font-size: 1.4em;
+        }
+
+        .patient-details {
+            display: none; /* Caché par défaut */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .toggle-details {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: 0.5rem;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-details:hover {
+            transform: scale(1.1);
+        }
+
+        .toggle-details.active {
+            transform: rotate(180deg);
+        }
+
+        .patient-details span {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            border: 1px solid rgba(164, 69, 164, 0.1);
+        }
+
+        .patient-details span:hover {
+            transform: translateX(5px);
+            background-color: #f8f9fa;
+            border-color: var(--primary-color);
+        }
+
+        .patient-details i {
+            color: var(--primary-color);
+            width: 24px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        .patient-actions {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            padding-top: 1.5rem;
+            border-top: 2px solid rgba(164, 69, 164, 0.1);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: var(--transition);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            box-shadow: 0 4px 15px rgba(164, 69, 164, 0.2);
+        }
+
+        .btn i {
+            font-size: 1.3em;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            opacity: 0.9;
+        }
+
+        .pdf-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .pdf-btn {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
+        }
+
+        .pdf-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+            background: linear-gradient(135deg, #c82333, #dc3545);
+        }
+
+        .pdf-options {
+            display: none;
+            position: absolute;
+            right: 0;
+            bottom: 100%;
+            margin-bottom: 0.8rem;
+            background: white;
+            min-width: 250px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            z-index: 1000;
+            border: 1px solid rgba(220, 53, 69, 0.1);
+        }
+
+        .pdf-dropdown:hover .pdf-options {
+            display: block;
+        }
+
+        .pdf-option {
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(220, 53, 69, 0.1);
+            background: white;
+        }
+
+        .pdf-option:last-child {
+            border-bottom: none;
+        }
+
+        .pdf-option:hover {
+            background: #fff5f5;
+            color: #dc3545;
+            transform: translateX(5px);
+        }
+
+        .pdf-option i {
+            color: #dc3545;
+            font-size: 1.2em;
+            width: 24px;
+            text-align: center;
+        }
+
+        .no-patients {
+            text-align: center;
+            padding: 4rem;
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+            font-size: 1.4rem;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .no-patients i {
+            font-size: 4rem;
+            color: var(--primary-color);
+            opacity: 0.5;
+        }
+
+        .no-patients p {
+            font-size: 1.6rem;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+                padding: 1.5rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .patient-details {
+                grid-template-columns: 1fr;
+            }
+
+            .patient-actions {
+                flex-direction: column;
+            }
+
+            .btn, .pdf-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .pdf-options {
+                position: fixed;
+                bottom: auto;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 90%;
+                max-width: 300px;
+                margin: 0;
+            }
+
+            .pdf-options::after {
+                display: none;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-content {
+            position: relative;
+            background: var(--glass-bg);
+            margin: 20px auto;
+            padding: 2.5rem;
+            width: 95%;
+            max-width: 800px;
+            max-height: 90vh;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideIn 0.3s ease;
+            overflow-y: auto;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 1.5rem;
+            top: 1.5rem;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(164, 69, 164, 0.1);
+        }
+
+        .close-modal:hover {
+            background: rgba(164, 69, 164, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .ordonnance-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .ordonnance-header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .ordonnance-header h2 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .ordonnance-header p {
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .ordonnance-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .ordonnance-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ordonnance-section h3 i {
+            color: var(--secondary-color);
+        }
+
+        .ordonnance-section textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 100px;
+            transition: var(--transition);
+        }
+
+        .ordonnance-section textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(164, 69, 164, 0.1);
+        }
+
+        .medicament-input {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .medicament-input input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .medicament-input input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(164, 69, 164, 0.1);
+        }
+
+        .medicament-list {
+            margin-top: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .medicament-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .medicament-item:hover {
+            background: #f0f0f0;
+        }
+
+        .medicament-item button {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .medicament-item button:hover {
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .ordonnance-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .ordonnance-actions button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .ordonnance-actions button.primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .ordonnance-actions button.secondary {
+            background: #f8f9fa;
+            color: var(--text-color);
+        }
+
+        .ordonnance-actions button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .ordonnance-actions button i {
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            .modal {
+                padding: 10px;
+            }
+
+            .modal-content {
+                margin: 10px auto;
+                padding: 1.5rem;
+                width: 100%;
+            }
+
+            .medicament-input {
+                flex-direction: column;
+            }
+
+            .medicament-input input {
+                width: 100%;
+            }
+
+            .ordonnance-actions {
+                flex-direction: column;
+            }
+
+            .ordonnance-actions button {
+                width: 100%;
+            }
+        }
+
+        .history-section {
+            grid-column: 1 / -1;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .history-section h4 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .history-item:hover {
+            background: #f0f0f0;
+            transform: translateX(5px);
+        }
+
+        .history-item .date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .history-item .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .history-item .actions button {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: 0.3rem;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .history-item .actions button:hover {
+            background: rgba(164, 69, 164, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Liste des Patients</h1>
+            <a href="dashboard-med.html" class="btn">
+                <i class="fas fa-arrow-left"></i>
+                Retour au tableau de bord
+            </a>
+        </div>
+
+        <div class="patients-list" id="patientsList">
+            <!-- Les patients seront ajoutés dynamiquement ici -->
+        </div>
+    </div>
+
+    <script>
+        // Fonction pour charger la liste des patients
+        async function loadPatients() {
+            try {
+                console.log('Tentative de chargement des patients...');
+                const response = await fetch('http://localhost:5000/api/users');
+                console.log('Réponse reçue:', response.status, response.statusText);
+                
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status} ${response.statusText}`);
+                }
+
+                const text = await response.text();
+                console.log('Données reçues:', text);
+
+                try {
+                    const users = JSON.parse(text);
+                    console.log('Données parsées:', users);
+                    displayPatients(users);
+                } catch (parseError) {
+                    console.error('Erreur de parsing JSON:', parseError);
+                    throw new Error('Format de données invalide reçu du serveur');
+                }
+            } catch (error) {
+                console.error('Erreur détaillée:', error);
+                alert(`Erreur lors du chargement des patients: ${error.message}`);
+            }
+        }
+
+        // Fonction pour afficher les patients
+        function displayPatients(users) {
+            if (!Array.isArray(users)) {
+                console.error('Les données reçues ne sont pas un tableau:', users);
+                alert('Format de données invalide');
+                return;
+            }
+
+            const patientsList = document.getElementById('patientsList');
+            if (users.length === 0) {
+                patientsList.innerHTML = `
+                    <div class="no-patients">
+                        <i class="fas fa-user-slash"></i>
+                        <p>Aucun patient trouvé</p>
+                    </div>`;
+                return;
+            }
+
+            patientsList.innerHTML = users.map(user => {
+                // Vérification supplémentaire du rôle
+                if (user.role !== 'patient') {
+                    console.log(`Utilisateur ${user.nom} ignoré car n'est pas un patient`);
+                    return '';
+                }
+
+                return `
+                <div class="patient-item">
+                    <div class="patient-info">
+                        <div class="patient-name">
+                            <i class="fas fa-user"></i>
+                            ${user.nom || 'Sans nom'} ${user.prenom || ''}
+                            <span class="patient-role">Patient</span>
+                            <button class="toggle-details" onclick="togglePatientDetails(this)">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="patient-details">
+                            <span><i class="fas fa-id-card"></i> N° Patient: ${user.patientId || 'Non assigné'}</span>
+                            <span><i class="fas fa-envelope"></i> Email: ${user.email || 'Non spécifié'}</span>
+                            <span><i class="fas fa-calendar"></i> Date de naissance: ${user.dateNaissance ? new Date(user.dateNaissance).toLocaleDateString() : 'Non spécifiée'}</span>
+                            <span><i class="fas fa-venus-mars"></i> Sexe: ${user.sexe || 'Non spécifié'}</span>
+                            <span><i class="fas fa-phone"></i> Téléphone: ${user.telephone || 'Non spécifié'}</span>
+                            <span><i class="fas fa-map-marker-alt"></i> Adresse: ${user.adresse || 'Non spécifiée'}</span>
+                            <span><i class="fas fa-allergies"></i> Allergies: ${user.allergies || 'Aucune'}</span>
+                            <span><i class="fas fa-pills"></i> Médications: ${user.medications || 'Aucune'}</span>
+                            <span><i class="fas fa-users"></i> Antécédents familiaux: ${user.antecedentsFamiliaux || 'Aucun'}</span>
+                            <span><i class="fas fa-history"></i> Antécédents personnels: ${user.antecedentsPersonnels || 'Aucun'}</span>
+                            <span><i class="fas fa-phone-alt"></i> Contact d'urgence: ${user.contactUrgence ? `${user.contactUrgence.nom} - ${user.contactUrgence.telephone}` : 'Non spécifié'}</span>
+                            <span><i class="fas fa-clock"></i> Créé le: ${new Date(user.createdAt).toLocaleDateString()}</span>
+                            <span><i class="fas fa-edit"></i> Mis à jour le: ${new Date(user.updatedAt).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                    <div class="patient-actions">
+                        <button onclick="modifierPatient('${user._id}')" class="btn">
+                            <i class="fas fa-edit"></i>
+                            Modifier les informations
+                        </button>
+                        <a href="fiches-medicales.html" class="btn">
+                            <i class="fas fa-file-medical"></i>
+                            Fiche médicale
+                        </a>
+                        <a href="ordonnances.html" class="btn">
+                            <i class="fas fa-prescription"></i>
+                            Ordonnance
+                        </a>
+                    </div>
+                </div>`;
+            }).filter(Boolean).join('');
+        }
+
+        // Fonction pour modifier les informations d'un patient
+        function modifierPatient(id) {
+            console.log('Modifier patient:', id);
+            // Rediriger vers la page de modification avec l'ID du patient
+            window.location.href = `modifier-patient.html?id=${id}`;
+        }
+
+        // Fonction pour basculer l'affichage des détails du patient
+        function togglePatientDetails(button) {
+            const details = button.closest('.patient-info').querySelector('.patient-details');
+            const isVisible = details.style.display === 'grid';
+            
+            details.style.display = isVisible ? 'none' : 'grid';
+            button.classList.toggle('active');
+        }
+
+        // Charger la liste des patients au chargement de la page
+        document.addEventListener('DOMContentLoaded', loadPatients);
+    </script>
+</body>
+</html> 

@@ -6,6 +6,7 @@
     <title>Tableau de bord - Dr Kemmouche</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/navbar.js"></script>
     <style>
         :root {
             --primary-color: #a445a4;
@@ -31,364 +32,262 @@
         body {
             background: var(--bg-gradient);
             color: var(--text-color);
-            line-height: 1.6;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow-x: hidden;
+            padding-top: 80px;
         }
 
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('pattern.png') repeat;
-            opacity: 0.1;
-            animation: patternMove 20s linear infinite;
-            z-index: 0;
-        }
-
-        /* Navbar Styles */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-            animation: slideDown 0.5s ease-out;
-        }
-
-        .logo img {
-            height: 50px;
-            transition: var(--transition);
-            filter: drop-shadow(0 0 10px rgba(164, 69, 164, 0.5));
-        }
-
-        .logo img:hover {
-            transform: scale(1.05) rotate(-2deg);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: var(--text-color);
-            text-decoration: none;
-            font-weight: 500;
-            position: relative;
-            padding: 0.5rem 0;
-            transition: var(--transition);
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover::after,
-        .nav-links a.active::after {
-            width: 100%;
-        }
-
-        .nav-links a:hover {
-            color: var(--secondary-color);
-            transform: translateY(-2px);
-        }
-
-        /* Dashboard Styles */
-        .dashboard {
-            min-height: 100vh;
+        .main-content {
             padding: 2rem;
-            padding-top: 100px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .dashboard-container {
-            display: flex;
-            gap: 2rem;
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
-        /* Sidebar Styles */
-        .sidebar {
-            width: 300px;
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
             background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 2rem;
+            padding: 1.5rem;
+            border-radius: 16px;
             box-shadow: var(--shadow);
-            height: fit-content;
-            border: 1px solid rgba(164, 69, 164, 0.2);
-        }
-
-        .doctor-profile {
-            text-align: center;
             margin-bottom: 2rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid rgba(164, 69, 164, 0.2);
         }
 
-        .doctor-profile img {
-            width: 120px;
-            height: 120px;
+        .doctor-photo {
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 1rem;
-            border: 3px solid var(--primary-color);
-            box-shadow: 0 0 20px rgba(164, 69, 164, 0.3);
+            box-shadow: 0 4px 24px rgba(164, 69, 164, 0.3);
+            border: 4px solid var(--primary-color);
+            background: #fff;
         }
 
-        .doctor-profile h3 {
-            color: var(--secondary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .doctor-profile p {
-            color: var(--text-color);
-            opacity: 0.8;
-        }
-
-        .dashboard-nav {
+        .header-info {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
         }
 
-        .dashboard-nav a {
-            color: var(--text-color);
-            text-decoration: none;
-            padding: 1rem;
-            border-radius: 12px;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        .header-info h1 {
+            font-size: 2rem;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-info p {
+            color: var(--secondary-color);
+            font-size: 1.1rem;
             font-weight: 500;
         }
 
-        .dashboard-nav a i {
-            width: 24px;
-            text-align: center;
-            font-size: 1.2rem;
+        .user-menu {
+            margin-left: auto;
+            position: relative;
         }
 
-        .dashboard-nav a:hover,
-        .dashboard-nav a.active {
-            background: rgba(164, 69, 164, 0.1);
-            color: var(--secondary-color);
-            transform: translateX(5px);
-        }
-
-        /* Main Content Styles */
-        .main-content {
-            flex: 1;
+        .user-menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1.5rem;
             background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 2rem;
+            border: 1px solid rgba(164, 69, 164, 0.2);
+            border-radius: 8px;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-menu-btn:hover {
+            background: rgba(164, 69, 164, 0.2);
+        }
+
+        .user-menu-content {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 1rem;
+            min-width: 200px;
+            margin-top: 0.5rem;
+            display: none;
             box-shadow: var(--shadow);
             border: 1px solid rgba(164, 69, 164, 0.2);
         }
 
-        .dashboard-header {
+        .user-menu-content.show {
+            display: block;
+        }
+
+        .user-menu-content a {
+            display: block;
+            padding: 0.8rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: var(--transition);
+            border-radius: 4px;
+        }
+
+        .user-menu-content a:hover {
+            background: rgba(164, 69, 164, 0.2);
+            color: var(--secondary-color);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: var(--glass-bg);
+            border-radius: 16px;
+            padding: 1.8rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(164, 69, 164, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 32px rgba(164, 69, 164, 0.3);
+        }
+
+        .dashboard-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(164, 69, 164, 0.15);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover .card-icon {
+            transform: scale(1.1);
+            background: rgba(164, 69, 164, 0.25);
+        }
+
+        .card-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-description {
+            opacity: 0.8;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .appointments-section {
+            background: var(--glass-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(164, 69, 164, 0.2);
+            border-bottom: 2px solid rgba(164, 69, 164, 0.2);
         }
 
-        .dashboard-header h2 {
+        .section-title {
+            font-size: 1.5rem;
             color: var(--secondary-color);
-            font-size: 1.8rem;
-            text-shadow: 0 0 20px rgba(243, 108, 156, 0.3);
-        }
-
-        .date-filter input {
-            background: var(--card-bg);
-            border: 2px solid var(--primary-color);
-            border-radius: 12px;
-            padding: 0.8rem 1.2rem;
-            color: var(--text-color);
-            font-size: 0.9rem;
-            transition: var(--transition);
-        }
-
-        .date-filter input:focus {
-            outline: none;
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 15px rgba(243, 108, 156, 0.3);
-        }
-
-        /* Dashboard Section Styles */
-        .dashboard-section {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(164, 69, 164, 0.2);
-            transition: var(--transition);
-        }
-
-        .dashboard-section:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
-        }
-
-        .dashboard-section h3 {
-            color: var(--secondary-color);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            font-size: 1.4rem;
-        }
-
-        .dashboard-section h3 i {
-            font-size: 1.6rem;
-        }
-
-        /* Form Styles */
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            color: var(--text-color);
-            margin-bottom: 0.8rem;
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 1rem;
-            border-radius: 12px;
-            border: 2px solid var(--primary-color);
-            background: var(--card-bg);
-            color: var(--text-color);
-            font-size: 0.95rem;
-            transition: var(--transition);
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 15px rgba(243, 108, 156, 0.3);
-        }
-
-        /* Button Styles */
-        .btn {
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
             font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.8rem;
-            transition: var(--transition);
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(164, 69, 164, 0.4);
-        }
-
-        .btn i {
-            font-size: 1.1rem;
-        }
-
-        /* Card Styles */
-        .appointment-card,
-        .article-card,
-        .patient-card,
-        .unavailable-slot {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(164, 69, 164, 0.2);
-            transition: var(--transition);
-        }
-
-        .appointment-card:hover,
-        .article-card:hover,
-        .patient-card:hover,
-        .unavailable-slot:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(164, 69, 164, 0.2);
-        }
-
-        .appointment-info h4,
-        .article-card h4,
-        .patient-card h4 {
-            color: var(--secondary-color);
-            margin-bottom: 0.8rem;
-            font-size: 1.2rem;
-        }
-
-        .appointment-info p,
-        .article-card p,
-        .patient-card p {
-            color: var(--text-color);
-            opacity: 0.9;
-            margin-bottom: 0.5rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.8rem;
         }
 
-        .appointment-info p i,
-        .patient-card p i {
-            color: var(--primary-color);
-            width: 20px;
+        .appointments-list {
+            display: grid;
+            gap: 1rem;
         }
 
-        /* Status Badges */
-        .status-badge {
-            display: inline-block;
-            padding: 0.4rem 0.8rem;
+        .appointment-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .appointment-card:hover {
+            transform: translateX(5px);
+        }
+
+        .appointment-info {
+            flex: 1;
+        }
+
+        .appointment-date {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .appointment-type {
+            opacity: 0.8;
+        }
+
+        .appointment-status {
+            padding: 0.3rem 0.8rem;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .status-confirmed {
@@ -406,947 +305,689 @@
             color: var(--danger-color);
         }
 
-        /* Action Buttons */
-        .appointment-actions,
-        .article-actions {
-            display: flex;
-            gap: 0.8rem;
-            margin-top: 1rem;
-        }
-
-        .btn-action {
-            padding: 0.6rem 1rem;
-            font-size: 0.9rem;
-        }
-
-        .btn-confirm {
-            background: linear-gradient(90deg, var(--success-color), #81C784);
-        }
-
-        .btn-cancel {
-            background: linear-gradient(90deg, var(--danger-color), #E57373);
-        }
-
-        /* Search Input */
-        .search-input {
-            width: 100%;
-            padding: 1rem;
-            border-radius: 12px;
-            border: 2px solid var(--primary-color);
-            background: var(--card-bg);
-            color: var(--text-color);
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-            transition: var(--transition);
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 15px rgba(243, 108, 156, 0.3);
-        }
-
-        /* Medical Record Styles */
-        .medical-record-details {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-top: 2rem;
-        }
-
-        .patient-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(164, 69, 164, 0.2);
-        }
-
-        .medical-record-tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid rgba(164, 69, 164, 0.2);
-            padding-bottom: 1rem;
-        }
-
-        .tab-btn {
-            background: none;
-            border: none;
-            color: var(--text-color);
-            padding: 0.8rem 1.5rem;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: var(--transition);
-            font-weight: 500;
-        }
-
-        .tab-btn:hover {
-            background: rgba(164, 69, 164, 0.1);
-            color: var(--secondary-color);
-        }
-
-        .tab-btn.active {
-            background: rgba(164, 69, 164, 0.2);
-            color: var(--secondary-color);
-        }
-
-        .tab-content {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 1.5rem;
-        }
-
-        /* Animations */
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes patternMove {
-            from { background-position: 0 0; }
-            to { background-position: 100% 100%; }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .dashboard-container {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-                margin-bottom: 2rem;
-            }
-
-            .dashboard-nav {
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .dashboard-nav a {
-                flex: 1;
-                min-width: 200px;
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
+        @media (max-width: 900px) {
+            .main-content {
                 padding: 1rem;
             }
-
-            .nav-links {
-                display: none;
+            .dashboard-grid {
+                grid-template-columns: 1fr;
             }
-
-            .dashboard {
-                padding: 1rem;
-                padding-top: 80px;
-            }
-
-            .dashboard-header {
+            .header {
                 flex-direction: column;
                 gap: 1rem;
                 text-align: center;
             }
-
-            .appointment-actions,
-            .article-actions {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
         }
 
-        /* Dropdown Styles */
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
+        .btn {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
             background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            min-width: 200px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            z-index: 1000;
-            border: 1px solid rgba(164, 69, 164, 0.2);
-            padding: 0.5rem 0;
-        }
-
-        .dropdown-content a {
-            display: block;
-            padding: 0.8rem 1.5rem;
             color: var(--text-color);
-            text-decoration: none;
-            transition: var(--transition);
-            font-size: 0.9rem;
+        }
+        .btn:hover {
+            transform: scale(1.1);
+        }
+        .btn-success {
+            background: rgba(76, 175, 80, 0.2);
+            color: var(--success-color);
+        }
+        .btn-danger {
+            background: rgba(244, 67, 54, 0.2);
+            color: var(--danger-color);
+        }
+        .appointment-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .dropdown-content a:hover {
-            background: rgba(164, 69, 164, 0.1);
-            color: var(--secondary-color);
+        /* Styles pour la nouvelle section */
+        .all-appointments-section {
+            background: var(--glass-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
         }
 
-        .dropdown:hover .dropdown-content {
-            display: block;
-            animation: fadeInUp 0.3s ease-out;
+        .appointment-filters {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
         }
 
-        .dropdown-trigger {
+        .appointment-filters select {
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(164, 69, 164, 0.2);
+            background: var(--card-bg);
+            color: var(--text-color);
             cursor: pointer;
         }
 
-        .dropdown-trigger::after {
-            content: '\f107';
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            margin-left: 0.5rem;
+        .all-appointments-list {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .appointment-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
             transition: var(--transition);
         }
 
-        .dropdown:hover .dropdown-trigger::after {
-            transform: rotate(180deg);
+        .appointment-card:hover {
+            transform: translateX(5px);
+        }
+
+        .appointment-details {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .appointment-date-time {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .appointment-patient {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .appointment-type {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .appointment-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-en_attente {
+            background: rgba(255, 193, 7, 0.2);
+            color: var(--warning-color);
+        }
+
+        .status-confirme {
+            background: rgba(76, 175, 80, 0.2);
+            color: var(--success-color);
+        }
+
+        .status-annule {
+            background: rgba(244, 67, 54, 0.2);
+            color: var(--danger-color);
+        }
+
+        /* Styles pour le modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--glass-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(164, 69, 164, 0.2);
+            border-radius: 8px;
+            color: var(--text-color);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+        }
+
+        /* Styles pour la liste des soins */
+        .soins-list {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .soin-item {
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .soin-info {
+            flex: 1;
+        }
+
+        .soin-title {
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .soin-type {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .soin-actions {
+            display: flex;
+            gap: 0.5rem;
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="logo">
-            <a href="index.html">
-                <img src="logo.png" alt="Dr Kemmouche Logo">
-            </a>
-        </div>
-        <div class="nav-links">
-            <a href="index.html">Accueil</a>
-            <a href="index.html#about">À propos</a>
-            <a href="index.html#cabinet">Cabinet</a>
-            <div class="dropdown">
-                <a href="#" class="dropdown-trigger">Soins</a>
-                <div class="dropdown-content">
-                    <a href="soins-peau.html">Soins pour la peau</a>
-                    <a href="soins-cheveux.html">Soins pour les cheveux</a>
+    <!-- La navbar sera automatiquement insérée ici par navbar.js -->
+    <main class="main-content">
+        <div class="header">
+            <img src="Docteur K.jpg" alt="Dr Kemmouche" class="doctor-photo">
+            <div class="header-info">
+                <h1>Dr Kemmouche</h1>
+                <p>Médecin spécialiste - Tableau de bord</p>
+            </div>
+            <div class="user-menu">
+                <button class="user-menu-btn">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Dr Kemmouche</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="user-menu-content">
+                    <a href="#"><i class="fas fa-user"></i> Mon profil</a>
+                    <a href="#"><i class="fas fa-cog"></i> Paramètres</a>
+                    <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
                 </div>
             </div>
-            <a href="articles.html">Articles</a>
-            <a href="temoignages.html">Témoignages</a>
-            <a href="rdv.html">Rendez-vous</a>
-            <a href="login.html">Connexion</a>
         </div>
-    </nav>
-
-    <!-- Dashboard Section -->
-    <section class="dashboard">
-        <div class="dashboard-container">
-            <div class="sidebar">
-                <div class="doctor-profile">
-                    <img src="Docteur K.jpg" alt="Dr Kemmouche">
-                    <h3>Dr Kemmouche</h3>
-                    <p>Médecin Esthétique</p>
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-users"></i> Liste des Patients</h3>
+                    <div class="card-icon"><i class="fas fa-users"></i></div>
                 </div>
-                <nav class="dashboard-nav">
-                    <a href="#appointments" class="active"><i class="fas fa-calendar-alt"></i> Rendez-vous</a>
-                    <a href="#articles"><i class="fas fa-newspaper"></i> Articles</a>
-                    <a href="#unavailable-slots"><i class="fas fa-calendar-times"></i> Créneaux indisponibles</a>
-                    <a href="#medical-records"><i class="fas fa-file-medical"></i> Dossiers médicaux</a>
-                    <a href="#settings"><i class="fas fa-cog"></i> Paramètres</a>
-                </nav>
+                <a href="listesPatients.html" class="btn" style="width: 100%; text-align: center; padding: 1rem; margin-top: 1rem;">
+                    <i class="fas fa-list"></i> Voir la liste des patients
+                </a>
             </div>
-            
-            <div class="main-content">
-                <div class="dashboard-header">
-                    <h2>Tableau de bord</h2>
-                    <div class="date-filter">
-                        <input type="date" id="dateFilter">
-                    </div>
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-comment-medical"></i> Témoignages</h3>
+                    <div class="card-icon"><i class="fas fa-comment-medical"></i></div>
                 </div>
-
-                <!-- Appointments Section -->
-                <div class="dashboard-section" id="appointments">
-                    <h3><i class="fas fa-calendar-alt"></i> Rendez-vous</h3>
-                    <div class="appointments-list" id="appointmentsList">
-                        <!-- Les rendez-vous seront chargés dynamiquement ici -->
-                    </div>
+                <div class="card-value" id="totalTestimonials">0</div>
+                <div class="card-description">Témoignages reçus</div>
+            </div>
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-spa"></i> Gestion des Soins</h3>
+                    <div class="card-icon"><i class="fas fa-spa"></i></div>
                 </div>
-
-                <!-- Articles Section -->
-                <div class="dashboard-section" id="articles">
-                    <h3><i class="fas fa-newspaper"></i> Articles</h3>
-                    <form id="articleForm" class="form-group">
-                        <div class="form-group">
-                            <label for="articleTitle">Titre</label>
-                            <input type="text" id="articleTitle" name="articleTitle" autocomplete="off" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="articleContent">Contenu</label>
-                            <textarea id="articleContent" name="articleContent" rows="6" autocomplete="off" required></textarea>
-                        </div>
-                        <button type="submit" class="btn">
-                            <i class="fas fa-paper-plane"></i> Publier l'article
-                        </button>
-                    </form>
-                    <div class="articles-list" id="articlesList">
-                        <!-- Les articles seront chargés dynamiquement ici -->
-                    </div>
+                <button onclick="showAddSoinModal()" class="btn" style="width: 100%; text-align: center; padding: 1rem; margin-top: 1rem;">
+                    <i class="fas fa-plus"></i> Ajouter un soin
+                </button>
+                <div class="soins-list" id="soinsList" style="margin-top: 1rem;">
+                    <!-- La liste des soins sera chargée ici -->
                 </div>
+            </div>
+        </div>
 
-                <!-- Unavailable Slots Section -->
-                <div class="dashboard-section" id="unavailable-slots">
-                    <h3><i class="fas fa-calendar-times"></i> Créneaux indisponibles</h3>
-                    <form id="unavailableSlotForm" class="form-group">
-                        <div class="form-group">
-                            <label for="unavailableDate">Date</label>
-                            <input type="date" id="unavailableDate" name="unavailableDate" autocomplete="off" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="unavailableTime">Heure</label>
-                            <input type="time" id="unavailableTime" name="unavailableTime" autocomplete="off" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="unavailableReason">Raison</label>
-                            <input type="text" id="unavailableReason" name="unavailableReason" autocomplete="off" required>
-                        </div>
-                        <button type="submit" class="btn">
-                            <i class="fas fa-plus"></i> Ajouter un créneau indisponible
-                        </button>
-                    </form>
-                    <div class="unavailable-slots" id="unavailableSlotsList">
-                        <!-- Les créneaux indisponibles seront chargés dynamiquement ici -->
-                    </div>
+        <!-- Section des rendez-vous -->
+        <div class="all-appointments-section">
+            <div class="section-header">
+                <h3 class="section-title"><i class="fas fa-calendar-alt"></i> Gestion des rendez-vous</h3>
+                <div class="appointment-filters">
+                    <select id="statusFilter" onchange="filterAppointments()">
+                        <option value="all">Tous les statuts</option>
+                        <option value="EN_ATTENTE">En attente</option>
+                        <option value="CONFIRME">Confirmés</option>
+                        <option value="ANNULE">Annulés</option>
+                    </select>
                 </div>
+            </div>
+            <div class="all-appointments-list" id="allAppointmentsList">
+                <!-- Les rendez-vous seront ajoutés dynamiquement ici -->
+            </div>
+        </div>
 
-                <!-- Medical Records Section -->
-                <div class="dashboard-section" id="medical-records">
-                    <h3><i class="fas fa-file-medical"></i> Dossiers médicaux</h3>
-                    
-                    <!-- Search Patient -->
+        <!-- Modal pour ajouter/modifier un soin -->
+        <div id="soinModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Ajouter un soin</h3>
+                    <button class="close-modal" onclick="closeModal('soinModal')">&times;</button>
+                </div>
+                <form id="soinForm">
                     <div class="form-group">
-                        <input type="text" id="patientSearch" name="patientSearch" placeholder="Rechercher un patient..." class="search-input" autocomplete="off">
+                        <label for="soinTitre">Titre du soin</label>
+                        <input type="text" id="soinTitre" required>
                     </div>
-
-                    <!-- Patient List -->
-                    <div class="patients-list" id="patientsList">
-                        <!-- Les patients seront chargés dynamiquement ici -->
+                    <div class="form-group">
+                        <label for="soinType">Type de soin</label>
+                        <select id="soinType" required>
+                            <option value="peau">Soin de la peau</option>
+                            <option value="cheveux">Soin des cheveux</option>
+                        </select>
                     </div>
-
-                    <!-- Medical Record Details -->
-                    <div class="medical-record-details" id="medicalRecordDetails" style="display: none;">
-                        <div class="patient-header">
-                            <h4 id="selectedPatientName"></h4>
-                            <button class="btn" onclick="generatePrescription()">
-                                <i class="fas fa-file-pdf"></i> Générer une ordonnance
-                            </button>
-                        </div>
-
-                        <div class="medical-record-tabs">
-                            <button class="tab-btn active" data-tab="history">Historique</button>
-                            <button class="tab-btn" data-tab="prescriptions">Ordonnances</button>
-                            <button class="tab-btn" data-tab="notes">Notes</button>
-                        </div>
-
-                        <div class="tab-content" id="historyTab">
-                            <div class="medical-history" id="medicalHistory">
-                                <!-- L'historique médical sera chargé dynamiquement ici -->
-                            </div>
-                            <button class="btn" onclick="addMedicalEntry()">
-                                <i class="fas fa-plus"></i> Ajouter une entrée
-                            </button>
-                        </div>
-
-                        <div class="tab-content" id="prescriptionsTab" style="display: none;">
-                            <div class="prescriptions-list" id="prescriptionsList">
-                                <!-- Les ordonnances seront chargées dynamiquement ici -->
-                            </div>
-                        </div>
-
-                        <div class="tab-content" id="notesTab" style="display: none;">
-                            <div class="notes-list" id="notesList">
-                                <!-- Les notes seront chargées dynamiquement ici -->
-                            </div>
-                            <button class="btn" onclick="addNote()">
-                                <i class="fas fa-plus"></i> Ajouter une note
-                            </button>
-                        </div>
+                    <div class="form-group">
+                        <label for="soinDescription">Description</label>
+                        <textarea id="soinDescription" required></textarea>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label for="soinPrix">Prix (€)</label>
+                        <input type="number" id="soinPrix" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="soinImage">Image URL</label>
+                        <input type="url" id="soinImage" placeholder="URL de l'image (optionnel)">
+                    </div>
+                    <div class="error-message" id="soinError"></div>
+                    <div class="success-message" id="soinSuccess"></div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('soinModal')">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </section>
+    </main>
 
-    <script src="script.js"></script>
     <script>
-    document.addEventListener('DOMContentLoaded', async function() {
-        // Charger les données initiales
-        console.log('Chargement des données...');
-        try {
-            await Promise.all([
-                loadAppointments(),
-                loadArticles(),
-                loadUnavailableSlots(),
-                loadPatients()
-            ]);
-            console.log('Données chargées avec succès');
-        } catch (error) {
-            console.error('Erreur lors du chargement des données:', error);
+        // Gestion du menu utilisateur
+        document.querySelector('.user-menu-btn').addEventListener('click', function() {
+            document.querySelector('.user-menu-content').classList.toggle('show');
+        });
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.user-menu')) {
+                document.querySelector('.user-menu-content').classList.remove('show');
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
         }
 
-        // Charger les rendez-vous
-        async function loadAppointments() {
+        // Charger les données du tableau de bord
+        async function loadDashboardData() {
             try {
-                console.log('Début du chargement des rendez-vous...');
-                const response = await fetch('http://localhost:5000/api/rdvs', {
-                    method: 'GET',
-                    headers: { 
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                // Charger les statistiques
+                const statsResponse = await fetch('http://localhost:5000/api/dashboard/stats', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
                     }
                 });
-
-                console.log('Statut de la réponse:', response.status);
+                const stats = await statsResponse.json();
+                document.getElementById('totalTestimonials').textContent = stats.totalTestimonials;
                 
-                if (!response.ok) {
-                    throw new Error(`Erreur HTTP: ${response.status}`);
-                }
+                // Charger tous les rendez-vous
+                loadAllAppointments();
+            } catch (error) {
+                console.error('Erreur lors du chargement des données:', error);
+                alert('Erreur lors du chargement des données');
+            }
+        }
 
-                const rdvs = await response.json();
-                console.log('Rendez-vous reçus:', rdvs);
-                
-                const appointmentsList = document.getElementById('appointmentsList');
-                if (!appointmentsList) {
-                    console.error('Élément appointmentsList non trouvé dans le DOM');
+        // Fonction pour charger tous les rendez-vous
+        async function loadAllAppointments() {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    window.location.href = 'login.html';
                     return;
                 }
 
-                if (Array.isArray(rdvs) && rdvs.length > 0) {
-                    appointmentsList.innerHTML = rdvs.map(rdv => `
-                        <div class="appointment-card">
-                            <div class="appointment-info">
-                                <h4>${rdv.nomPatient || 'Patient'}</h4>
-                                <p>${rdv.typeSoin || 'Consultation'}</p>
-                                <p><i class="fas fa-calendar"></i> ${new Date(rdv.date).toLocaleDateString('fr-FR', { 
-                                    weekday: 'long', 
-                                    year: 'numeric', 
-                                    month: 'long', 
-                                    day: 'numeric' 
-                                })}</p>
-                                <p><i class="fas fa-clock"></i> ${rdv.heure}</p>
-                                <p><i class="fas fa-comment"></i> ${rdv.commentaire || 'Aucun commentaire'}</p>
-                                <p><i class="fas fa-info-circle"></i> Statut: ${rdv.statut || 'en_attente'}</p>
-                            </div>
-                            <div class="appointment-actions">
-                                <button class="btn" onclick="updateAppointmentStatus('${rdv._id}', 'confirme')">
-                                    <i class="fas fa-check"></i> Confirmer
-                                </button>
-                                <button class="btn" onclick="updateAppointmentStatus('${rdv._id}', 'annule')">
-                                    <i class="fas fa-times"></i> Annuler
-                                </button>
-                            </div>
-                        </div>
-                    `).join('');
-                } else {
-                    appointmentsList.innerHTML = `
-                        <div class="no-rdv">
-                            <i class="fas fa-calendar-times"></i>
-                            <p>Aucun rendez-vous prévu</p>
-                        </div>
-                    `;
-                }
-            } catch (error) {
-                console.error('Erreur détaillée lors du chargement des rendez-vous:', error);
-                const appointmentsList = document.getElementById('appointmentsList');
-                if (appointmentsList) {
-                    appointmentsList.innerHTML = `
-                        <div class="no-rdv">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <p>Erreur lors du chargement des rendez-vous</p>
-                            <p>Détails de l'erreur: ${error.message}</p>
-                            <button onclick="loadAppointments()" class="btn" style="margin-top: 1rem;">
-                                <i class="fas fa-sync-alt"></i> Réessayer
-                            </button>
-                        </div>
-                    `;
-                }
-            }
-        }
-
-        // Charger les articles
-        async function loadArticles() {
-            try {
-                const response = await fetch('http://localhost:5000/api/articles', {
+                const response = await fetch('http://localhost:5000/api/rdvs', {
                     headers: {
-                        'Accept': 'application/json'
+                        'Authorization': `Bearer ${token}`
                     }
                 });
-                
-                if (!response.ok) throw new Error('Erreur lors du chargement des articles');
-                
-                const articles = await response.json();
-                const articlesList = document.getElementById('articlesList');
-                
-                articlesList.innerHTML = articles.map(article => `
-                    <div class="article-card">
-                        <h4>${article.titre}</h4>
-                        <p>${article.contenu}</p>
-                        <div class="article-actions">
-                            <button class="btn" onclick="editArticle('${article.id}')">
-                                <i class="fas fa-edit"></i> Modifier
-                            </button>
-                            <button class="btn" onclick="deleteArticle('${article.id}')">
-                                <i class="fas fa-trash"></i> Supprimer
-                            </button>
-                        </div>
-                    </div>
-                `).join('');
-            } catch (error) {
-                console.error('Erreur:', error);
-            }
-        }
 
-        // Charger les créneaux indisponibles
-        async function loadUnavailableSlots() {
-            try {
-                const response = await fetch('http://localhost:5000/api/unavailable-slots', {
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) throw new Error('Erreur lors du chargement des créneaux indisponibles');
-                
-                const slots = await response.json();
-                const slotsList = document.getElementById('unavailableSlotsList');
-                
-                slotsList.innerHTML = slots.map(slot => `
-                    <div class="unavailable-slot">
-                        <p><i class="fas fa-calendar"></i> ${new Date(slot.date).toLocaleDateString('fr-FR')}</p>
-                        <p><i class="fas fa-clock"></i> ${slot.heure}</p>
-                        <p><i class="fas fa-info-circle"></i> ${slot.raison}</p>
-                        <button class="btn" onclick="deleteUnavailableSlot('${slot.id}')">
-                            <i class="fas fa-trash"></i> Supprimer
-                        </button>
-                    </div>
-                `).join('');
-            } catch (error) {
-                console.error('Erreur:', error);
-            }
-        }
-
-        // Gestionnaire de formulaire d'article
-        document.getElementById('articleForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const titre = document.getElementById('articleTitle').value;
-            const contenu = document.getElementById('articleContent').value;
-            
-            try {
-                const response = await fetch('http://localhost:5000/api/articles', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ titre, contenu })
-                });
-                
-                if (!response.ok) throw new Error('Erreur lors de la publication de l\'article');
-                
-                document.getElementById('articleTitle').value = '';
-                document.getElementById('articleContent').value = '';
-                await loadArticles();
-            } catch (error) {
-                console.error('Erreur:', error);
-            }
-        });
-
-        // Gestionnaire de formulaire de créneau indisponible
-        document.getElementById('unavailableSlotForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const date = document.getElementById('unavailableDate').value;
-            const heure = document.getElementById('unavailableTime').value;
-            const raison = document.getElementById('unavailableReason').value;
-            
-            try {
-                const response = await fetch('http://localhost:5000/api/unavailable-slots', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ date, heure, raison })
-                });
-                
-                if (!response.ok) throw new Error('Erreur lors de l\'ajout du créneau indisponible');
-                
-                document.getElementById('unavailableDate').value = '';
-                document.getElementById('unavailableTime').value = '';
-                document.getElementById('unavailableReason').value = '';
-                await loadUnavailableSlots();
-            } catch (error) {
-                console.error('Erreur:', error);
-            }
-        });
-
-        // Fonctions utilitaires
-        window.updateAppointmentStatus = async function(id, status) {
-            try {
-                const response = await fetch(`http://localhost:5000/api/rdvs/${id}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ status })
-                });
-                
-                if (!response.ok) throw new Error('Erreur lors de la mise à jour du rendez-vous');
-                
-                await loadAppointments();
-            } catch (error) {
-                console.error('Erreur:', error);
-            }
-        };
-
-        window.deleteArticle = async function(id) {
-            if (!confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) return;
-            
-            try {
-                const response = await fetch(`http://localhost:5000/api/articles/${id}`, {
-                    method: 'DELETE'
-                });
-                
-                if (!response.ok) throw new Error('Erreur lors de la suppression de l\'article');
-                
-                await loadArticles();
-            } catch (error) {
-                console.error('Erreur:', error);
-            }
-        };
-
-        window.deleteUnavailableSlot = async function(id) {
-            if (!confirm('Êtes-vous sûr de vouloir supprimer ce créneau indisponible ?')) return;
-            
-            try {
-                const response = await fetch(`http://localhost:5000/api/unavailable-slots/${id}`, {
-                    method: 'DELETE'
-                });
-                
-                if (!response.ok) throw new Error('Erreur lors de la suppression du créneau indisponible');
-                
-                await loadUnavailableSlots();
-            } catch (error) {
-                console.error('Erreur:', error);
-            }
-        };
-
-        // Mettre à jour les données quand la date change
-        document.getElementById('dateFilter').addEventListener('change', async function(e) {
-            const date = e.target.value;
-            try {
-                const response = await fetch(`http://localhost:5000/api/rdvs?date=${date}`, {
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) throw new Error('Erreur lors du filtrage des rendez-vous');
-                
                 const appointments = await response.json();
-                const appointmentsList = document.getElementById('appointmentsList');
-                
-                appointmentsList.innerHTML = appointments.map(rdv => `
-                    <div class="appointment-card">
-                        <div class="appointment-info">
-                            <h4>${rdv.nomPatient}</h4>
-                            <p>${rdv.typeSoin || 'Consultation'}</p>
-                            <p><i class="fas fa-calendar"></i> ${new Date(rdv.date).toLocaleDateString('fr-FR')}</p>
-                            <p><i class="fas fa-clock"></i> ${rdv.heure}</p>
+                displayAllAppointments(appointments);
+            } catch (error) {
+                console.error('Erreur lors du chargement des rendez-vous:', error);
+                alert('Erreur lors du chargement des rendez-vous');
+            }
+        }
+
+        // Fonction pour afficher tous les rendez-vous
+        function displayAllAppointments(appointments) {
+            const appointmentsList = document.getElementById('allAppointmentsList');
+            appointmentsList.innerHTML = appointments.map(appointment => `
+                <div class="appointment-card" data-status="${appointment.status}">
+                    <div class="appointment-details">
+                        <div class="appointment-date-time">
+                            <i class="fas fa-calendar"></i> ${new Date(appointment.date).toLocaleDateString()}
+                            <i class="fas fa-clock"></i> ${appointment.heure}
                         </div>
-                        <div class="appointment-actions">
-                            <button class="btn" onclick="updateAppointmentStatus('${rdv.id}', 'confirmed')">
+                        <div class="appointment-patient">
+                            <i class="fas fa-user"></i> ${appointment.patient.nom} ${appointment.patient.prenom}
+                        </div>
+                        <div class="appointment-type">
+                            <i class="fas fa-stethoscope"></i> ${appointment.type}
+                        </div>
+                    </div>
+                    <div class="appointment-actions">
+                        <span class="status-badge status-${appointment.status.toLowerCase()}">${appointment.status}</span>
+                        ${appointment.status === 'EN_ATTENTE' ? `
+                            <button onclick="confirmAppointment('${appointment._id}')" class="btn btn-success">
                                 <i class="fas fa-check"></i>
                             </button>
-                            <button class="btn" onclick="updateAppointmentStatus('${rdv.id}', 'cancelled')">
+                            <button onclick="cancelAppointment('${appointment._id}')" class="btn btn-danger">
                                 <i class="fas fa-times"></i>
                             </button>
-                        </div>
+                        ` : ''}
+                        <button onclick="viewAppointment('${appointment._id}')" class="btn">
+                            <i class="fas fa-eye"></i>
+                        </button>
                     </div>
-                `).join('');
-            } catch (error) {
-                console.error('Erreur:', error);
-            }
-        });
+                </div>
+            `).join('');
+        }
 
-        // Fonctions pour les dossiers médicaux
-        let selectedPatientId = null;
+        // Fonction pour filtrer les rendez-vous
+        function filterAppointments() {
+            const status = document.getElementById('statusFilter').value;
+            const appointments = document.querySelectorAll('.appointment-card');
+            
+            appointments.forEach(appointment => {
+                if (status === 'all' || appointment.dataset.status === status) {
+                    appointment.style.display = 'grid';
+                } else {
+                    appointment.style.display = 'none';
+                }
+            });
+        }
 
-        async function loadPatients() {
+        function viewAppointment(id) {
+            // Implémenter la logique pour afficher les détails du rendez-vous
+            console.log('Voir rendez-vous:', id);
+        }
+
+        // Fonction pour confirmer un rendez-vous
+        async function confirmAppointment(id) {
             try {
-                console.log('Début du chargement des patients...');
-                const response = await fetch('http://localhost:5000/api/patients', {
-                    method: 'GET',
+                const token = localStorage.getItem('token');
+                const response = await fetch(`http://localhost:5000/api/rdvs/${id}/confirm`, {
+                    method: 'PUT',
                     headers: {
-                        'Accept': 'application/json',
+                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
                 });
-
-                console.log('Statut de la réponse patients:', response.status);
                 
-                if (!response.ok) {
-                    throw new Error(`Erreur HTTP: ${response.status}`);
-                }
-
-                const patients = await response.json();
-                console.log('Patients reçus:', patients);
-                
-                const patientsList = document.getElementById('patientsList');
-                if (!patientsList) {
-                    console.error('Élément patientsList non trouvé dans le DOM');
-                    return;
-                }
-
-                if (Array.isArray(patients) && patients.length > 0) {
-                    patientsList.innerHTML = patients.map(patient => `
-                        <div class="patient-card" onclick="selectPatient('${patient._id}')">
-                            <h4>${patient.nom} ${patient.prenom}</h4>
-                            <p><i class="fas fa-calendar"></i> ${new Date(patient.dateNaissance).toLocaleDateString('fr-FR')}</p>
-                            <p><i class="fas fa-phone"></i> ${patient.tel || 'Non renseigné'}</p>
-                            <p><i class="fas fa-envelope"></i> ${patient.email || 'Non renseigné'}</p>
-                        </div>
-                    `).join('');
+                if (response.ok) {
+                    // Recharger les données après confirmation
+                    loadAllAppointments();
+                    alert('Rendez-vous confirmé avec succès');
                 } else {
-                    patientsList.innerHTML = `
-                        <div class="no-rdv">
-                            <i class="fas fa-user-slash"></i>
-                            <p>Aucun patient trouvé</p>
-                        </div>
-                    `;
+                    throw new Error('Erreur lors de la confirmation du rendez-vous');
                 }
             } catch (error) {
-                console.error('Erreur détaillée lors du chargement des patients:', error);
-                const patientsList = document.getElementById('patientsList');
-                if (patientsList) {
-                    patientsList.innerHTML = `
-                        <div class="no-rdv">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <p>Erreur lors du chargement des patients</p>
-                            <p>Détails de l'erreur: ${error.message}</p>
-                            <button onclick="loadPatients()" class="btn" style="margin-top: 1rem;">
-                                <i class="fas fa-sync-alt"></i> Réessayer
+                console.error('Erreur:', error);
+                alert('Erreur lors de la confirmation du rendez-vous');
+            }
+        }
+
+        // Fonction pour annuler un rendez-vous
+        async function cancelAppointment(id) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`http://localhost:5000/api/rdvs/${id}/cancel`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    // Recharger les données après annulation
+                    loadAllAppointments();
+                    alert('Rendez-vous annulé avec succès');
+                } else {
+                    throw new Error('Erreur lors de l\'annulation du rendez-vous');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de l\'annulation du rendez-vous');
+            }
+        }
+
+        // Fonctions pour la gestion des soins
+        function showAddSoinModal() {
+            document.getElementById('soinForm').reset();
+            document.getElementById('soinModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Charger la liste des soins
+        async function loadSoins() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('http://localhost:5000/api/soins', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const soins = await response.json();
+                
+                const soinsList = document.getElementById('soinsList');
+                soinsList.innerHTML = soins.map(soin => `
+                    <div class="soin-item">
+                        <div class="soin-info">
+                            <div class="soin-title">${soin.titre}</div>
+                            <div class="soin-type">${soin.type === 'peau' ? 'Soin de la peau' : 'Soin des cheveux'}</div>
+                        </div>
+                        <div class="soin-actions">
+                            <button onclick="editSoin('${soin._id}')" class="btn">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteSoin('${soin._id}')" class="btn btn-danger">
+                                <i class="fas fa-trash"></i>
                             </button>
                         </div>
-                    `;
-                }
-            }
-        }
-
-        async function selectPatient(patientId) {
-            try {
-                console.log('Sélection du patient:', patientId);
-                selectedPatientId = patientId;
-                const detailsSection = document.getElementById('medicalRecordDetails');
-                detailsSection.style.display = 'block';
-                
-                const response = await fetch(`http://localhost:5000/api/patients/${patientId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                console.log('Statut de la réponse:', response.status);
-                
-                if (!response.ok) {
-                    throw new Error(`Erreur HTTP: ${response.status}`);
-                }
-
-                const patient = await response.json();
-                console.log('Détails du patient reçus:', patient);
-                
-                document.getElementById('selectedPatientName').textContent = `${patient.nom} ${patient.prenom}`;
-                
-                await Promise.all([
-                    loadMedicalHistory(patientId),
-                    loadPrescriptions(patientId),
-                    loadNotes(patientId)
-                ]);
-            } catch (error) {
-                console.error('Erreur détaillée lors du chargement du dossier médical:', error);
-                document.getElementById('medicalRecordDetails').innerHTML = `
-                    <div class="no-rdv">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <p>Erreur lors du chargement du dossier médical</p>
-                        <p>Détails de l'erreur: ${error.message}</p>
-                        <button onclick="selectPatient('${patientId}')" class="btn" style="margin-top: 1rem;">
-                            <i class="fas fa-sync-alt"></i> Réessayer
-                        </button>
-                    </div>
-                `;
-            }
-        }
-
-        async function loadMedicalHistory(patientId) {
-            try {
-                const response = await fetch(`http://localhost:5000/api/patients/${patientId}/history`, {
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) throw new Error('Erreur lors du chargement de l\'historique médical');
-                
-                const history = await response.json();
-                const historyContainer = document.getElementById('medicalHistory');
-                
-                historyContainer.innerHTML = history.map(entry => `
-                    <div class="medical-entry">
-                        <h5>${new Date(entry.date).toLocaleDateString('fr-FR')}</h5>
-                        <p>${entry.description}</p>
-                        <p><strong>Diagnostic:</strong> ${entry.diagnostic}</p>
-                        <p><strong>Traitement:</strong> ${entry.traitement}</p>
                     </div>
                 `).join('');
             } catch (error) {
-                console.error('Erreur:', error);
+                console.error('Erreur lors du chargement des soins:', error);
             }
         }
 
-        async function loadPrescriptions(patientId) {
-            try {
-                const response = await fetch(`http://localhost:5000/api/patients/${patientId}/prescriptions`, {
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) throw new Error('Erreur lors du chargement des ordonnances');
-                
-                const prescriptions = await response.json();
-                const prescriptionsList = document.getElementById('prescriptionsList');
-                
-                prescriptionsList.innerHTML = prescriptions.map(prescription => `
-                    <div class="prescription-item">
-                        <div>
-                            <h5>${new Date(prescription.date).toLocaleDateString('fr-FR')}</h5>
-                            <p>${prescription.description}</p>
-                        </div>
-                        <button class="btn" onclick="downloadPrescription('${prescription.id}')">
-                            <i class="fas fa-download"></i> Télécharger
-                        </button>
-                    </div>
-                `).join('');
-            } catch (error) {
-                console.error('Erreur:', error);
-            }
-        }
+        // Gérer l'ajout/modification d'un soin
+        document.getElementById('soinForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorElement = document.getElementById('soinError');
+            const successElement = document.getElementById('soinSuccess');
 
-        async function loadNotes(patientId) {
             try {
-                const response = await fetch(`http://localhost:5000/api/patients/${patientId}/notes`, {
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) throw new Error('Erreur lors du chargement des notes');
-                
-                const notes = await response.json();
-                const notesList = document.getElementById('notesList');
-                
-                notesList.innerHTML = notes.map(note => `
-                    <div class="note-item">
-                        <h5>${new Date(note.date).toLocaleDateString('fr-FR')}</h5>
-                        <p>${note.contenu}</p>
-                    </div>
-                `).join('');
-            } catch (error) {
-                console.error('Erreur:', error);
-            }
-        }
+                const token = localStorage.getItem('token');
+                const soinData = {
+                    titre: document.getElementById('soinTitre').value,
+                    type: document.getElementById('soinType').value,
+                    description: document.getElementById('soinDescription').value,
+                    prix: parseFloat(document.getElementById('soinPrix').value),
+                    image: document.getElementById('soinImage').value
+                };
 
-        async function generatePrescription() {
-            if (!selectedPatientId) return;
-            
-            try {
-                const response = await fetch(`http://localhost:5000/api/prescriptions/generate`, {
+                const response = await fetch('http://localhost:5000/api/soins', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ patientId: selectedPatientId })
+                    body: JSON.stringify(soinData)
                 });
-                
-                if (!response.ok) throw new Error('Erreur lors de la génération de l\'ordonnance');
-                
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `ordonnance_${selectedPatientId}_${new Date().toISOString().split('T')[0]}.pdf`;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-                
-                await loadPrescriptions(selectedPatientId);
+
+                if (response.ok) {
+                    errorElement.style.display = 'none';
+                    successElement.textContent = 'Soin ajouté avec succès !';
+                    successElement.style.display = 'block';
+                    setTimeout(() => {
+                        closeModal('soinModal');
+                        loadSoins();
+                    }, 2000);
+                } else {
+                    const data = await response.json();
+                    throw new Error(data.message || 'Erreur lors de l\'ajout du soin');
+                }
+            } catch (error) {
+                errorElement.textContent = error.message;
+                errorElement.style.display = 'block';
+                successElement.style.display = 'none';
+            }
+        });
+
+        // Supprimer un soin
+        async function deleteSoin(id) {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer ce soin ?')) {
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`http://localhost:5000/api/soins/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    loadSoins();
+                } else {
+                    throw new Error('Erreur lors de la suppression du soin');
+                }
             } catch (error) {
                 console.error('Erreur:', error);
+                alert('Erreur lors de la suppression du soin');
             }
         }
 
-        // Gestion des onglets
-        document.querySelectorAll('.tab-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                
-                const tabId = button.dataset.tab + 'Tab';
-                document.querySelectorAll('.tab-content').forEach(content => {
-                    content.style.display = 'none';
+        // Modifier un soin
+        async function editSoin(id) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`http://localhost:5000/api/soins/${id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
-                document.getElementById(tabId).style.display = 'block';
-            });
-        });
+                const soin = await response.json();
 
-        // Recherche de patients
-        document.getElementById('patientSearch').addEventListener('input', async (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const patientCards = document.querySelectorAll('.patient-card');
-            
-            patientCards.forEach(card => {
-                const patientName = card.querySelector('h4').textContent.toLowerCase();
-                card.style.display = patientName.includes(searchTerm) ? 'block' : 'none';
-            });
+                document.getElementById('soinTitre').value = soin.titre;
+                document.getElementById('soinType').value = soin.type;
+                document.getElementById('soinDescription').value = soin.description;
+                document.getElementById('soinPrix').value = soin.prix;
+                document.getElementById('soinImage').value = soin.image;
+
+                document.getElementById('soinModal').style.display = 'flex';
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors du chargement des données du soin');
+            }
+        }
+
+        // Charger les données au chargement de la page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboardData();
+            loadSoins();
         });
-    });
     </script>
 </body>
 </html> 
